@@ -28,7 +28,7 @@ from hi import options_pb2 as hi_dot_options__pb2
 from hi.did import base_pb2 as hi_dot_did_dot_base__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/did/coin_admin.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x11hi/did/base.proto\"\x8d\x01\n\x07\x43oinKey\x12>\n\x05\x63hain\x18\x01 \x01(\tB#\xbaH r\x1bR\x03\x62tcR\x03\x65thR\x03trxR\x03solR\x05\x61ptos\xc8\x01\x01H\x00R\x05\x63hain\x88\x01\x01\x12+\n\x08\x63ontract\x18\x02 \x01(\tB\n\xbaH\x07r\x05\x10\x01\x18\x80\x01H\x01R\x08\x63ontract\x88\x01\x01\x42\x08\n\x06_chainB\x0b\n\t_contract\"6\n\nSetCoinReq\x12(\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0c.hi.did.CoinB\x06\xbaH\x03\xc8\x01\x01R\x04\x63oin\"<\n\rDeleteCoinReq\x12+\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0f.hi.did.CoinKeyB\x06\xbaH\x03\xc8\x01\x01R\x04\x63oin2\x85\x01\n\tCoinAdmin\x12\x38\n\x03Set\x12\x12.hi.did.SetCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12>\n\x06\x44\x65lete\x12\x15.hi.did.DeleteCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x17hi/did/coin_admin.proto\x12\x06hi.did\x1a\x1bgoogle/protobuf/empty.proto\x1a\x1b\x62uf/validate/validate.proto\x1a\x10hi/options.proto\x1a\x11hi/did/base.proto\"\x8d\x01\n\x07\x43oinKey\x12>\n\x05\x63hain\x18\x01 \x01(\tB#\xbaH r\x1bR\x03\x62tcR\x03\x65thR\x03trxR\x03solR\x05\x61ptos\xc8\x01\x01H\x00R\x05\x63hain\x88\x01\x01\x12+\n\x08\x63ontract\x18\x02 \x01(\tB\n\xbaH\x07r\x05\x10\x01\x18\x80\x01H\x01R\x08\x63ontract\x88\x01\x01\x42\x08\n\x06_chainB\x0b\n\t_contract\"}\n\x0e\x43oinAdminEntry\x12&\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0c.hi.did.CoinB\x04\x90\xb5\x18\x03R\x04\x63oin\x12,\n\x0cmerchant_bit\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\x0bmerchantBit\x88\x01\x01:\x04\x98\xb5\x18\x03\x42\x0f\n\r_merchant_bit\"K\n\x11\x43oinAdminListResp\x12\x30\n\x04list\x18\x01 \x03(\x0b\x32\x16.hi.did.CoinAdminEntryB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"x\n\nSetCoinReq\x12(\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0c.hi.did.CoinB\x06\xbaH\x03\xc8\x01\x01R\x04\x63oin\x12/\n\x0cmerchant_bit\x18\x02 \x01(\rB\x07\xbaH\x04*\x02\x18>H\x00R\x0bmerchantBit\x88\x01\x01\x42\x0f\n\r_merchant_bit\"<\n\rDeleteCoinReq\x12+\n\x04\x63oin\x18\x01 \x01(\x0b\x32\x0f.hi.did.CoinKeyB\x06\xbaH\x03\xc8\x01\x01R\x04\x63oin2\xc7\x01\n\tCoinAdmin\x12@\n\x04List\x12\x16.google.protobuf.Empty\x1a\x19.hi.did.CoinAdminListResp\"\x05\x8a\xb5\x18\x01\x04\x12\x38\n\x03Set\x12\x12.hi.did.SetCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12>\n\x06\x44\x65lete\x12\x15.hi.did.DeleteCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x42*Z(github.com/HiWorld-56/hi-proto/go/hi/didb\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -40,20 +40,38 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_COINKEY'].fields_by_name['chain']._serialized_options = b'\272H r\033R\003btcR\003ethR\003trxR\003solR\005aptos\310\001\001'
   _globals['_COINKEY'].fields_by_name['contract']._loaded_options = None
   _globals['_COINKEY'].fields_by_name['contract']._serialized_options = b'\272H\007r\005\020\001\030\200\001'
+  _globals['_COINADMINENTRY'].fields_by_name['coin']._loaded_options = None
+  _globals['_COINADMINENTRY'].fields_by_name['coin']._serialized_options = b'\220\265\030\003'
+  _globals['_COINADMINENTRY'].fields_by_name['merchant_bit']._loaded_options = None
+  _globals['_COINADMINENTRY'].fields_by_name['merchant_bit']._serialized_options = b'\220\265\030\003'
+  _globals['_COINADMINENTRY']._loaded_options = None
+  _globals['_COINADMINENTRY']._serialized_options = b'\230\265\030\003'
+  _globals['_COINADMINLISTRESP'].fields_by_name['list']._loaded_options = None
+  _globals['_COINADMINLISTRESP'].fields_by_name['list']._serialized_options = b'\220\265\030\003'
+  _globals['_COINADMINLISTRESP']._loaded_options = None
+  _globals['_COINADMINLISTRESP']._serialized_options = b'\230\265\030\003'
   _globals['_SETCOINREQ'].fields_by_name['coin']._loaded_options = None
   _globals['_SETCOINREQ'].fields_by_name['coin']._serialized_options = b'\272H\003\310\001\001'
+  _globals['_SETCOINREQ'].fields_by_name['merchant_bit']._loaded_options = None
+  _globals['_SETCOINREQ'].fields_by_name['merchant_bit']._serialized_options = b'\272H\004*\002\030>'
   _globals['_DELETECOINREQ'].fields_by_name['coin']._loaded_options = None
   _globals['_DELETECOINREQ'].fields_by_name['coin']._serialized_options = b'\272H\003\310\001\001'
+  _globals['_COINADMIN'].methods_by_name['List']._loaded_options = None
+  _globals['_COINADMIN'].methods_by_name['List']._serialized_options = b'\212\265\030\001\004'
   _globals['_COINADMIN'].methods_by_name['Set']._loaded_options = None
   _globals['_COINADMIN'].methods_by_name['Set']._serialized_options = b'\212\265\030\001\004'
   _globals['_COINADMIN'].methods_by_name['Delete']._loaded_options = None
   _globals['_COINADMIN'].methods_by_name['Delete']._serialized_options = b'\212\265\030\001\004'
   _globals['_COINKEY']._serialized_start=131
   _globals['_COINKEY']._serialized_end=272
-  _globals['_SETCOINREQ']._serialized_start=274
-  _globals['_SETCOINREQ']._serialized_end=328
-  _globals['_DELETECOINREQ']._serialized_start=330
-  _globals['_DELETECOINREQ']._serialized_end=390
-  _globals['_COINADMIN']._serialized_start=393
-  _globals['_COINADMIN']._serialized_end=526
+  _globals['_COINADMINENTRY']._serialized_start=274
+  _globals['_COINADMINENTRY']._serialized_end=399
+  _globals['_COINADMINLISTRESP']._serialized_start=401
+  _globals['_COINADMINLISTRESP']._serialized_end=476
+  _globals['_SETCOINREQ']._serialized_start=478
+  _globals['_SETCOINREQ']._serialized_end=598
+  _globals['_DELETECOINREQ']._serialized_start=600
+  _globals['_DELETECOINREQ']._serialized_end=660
+  _globals['_COINADMIN']._serialized_start=663
+  _globals['_COINADMIN']._serialized_end=862
 # @@protoc_insertion_point(module_scope)

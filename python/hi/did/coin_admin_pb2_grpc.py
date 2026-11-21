@@ -18,6 +18,11 @@ class CoinAdminStub(object):
         Args:
             channel: A grpc.Channel.
         """
+        self.List = channel.unary_unary(
+                '/hi.did.CoinAdmin/List',
+                request_serializer=google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+                response_deserializer=hi_dot_did_dot_coin__admin__pb2.CoinAdminListResp.FromString,
+                _registered_method=True)
         self.Set = channel.unary_unary(
                 '/hi.did.CoinAdmin/Set',
                 request_serializer=hi_dot_did_dot_coin__admin__pb2.SetCoinReq.SerializeToString,
@@ -36,6 +41,12 @@ class CoinAdminServicer(object):
     本地币种及标记/展开不上传。管理面只允许超管，由统一拦截器鉴权。
     """
 
+    def List(self, request, context):
+        """Missing associated documentation comment in .proto file."""
+        context.set_code(grpc.StatusCode.UNIMPLEMENTED)
+        context.set_details('Method not implemented!')
+        raise NotImplementedError('Method not implemented!')
+
     def Set(self, request, context):
         """Missing associated documentation comment in .proto file."""
         context.set_code(grpc.StatusCode.UNIMPLEMENTED)
@@ -51,6 +62,11 @@ class CoinAdminServicer(object):
 
 def add_CoinAdminServicer_to_server(servicer, server):
     rpc_method_handlers = {
+            'List': grpc.unary_unary_rpc_method_handler(
+                    servicer.List,
+                    request_deserializer=google_dot_protobuf_dot_empty__pb2.Empty.FromString,
+                    response_serializer=hi_dot_did_dot_coin__admin__pb2.CoinAdminListResp.SerializeToString,
+            ),
             'Set': grpc.unary_unary_rpc_method_handler(
                     servicer.Set,
                     request_deserializer=hi_dot_did_dot_coin__admin__pb2.SetCoinReq.FromString,
@@ -74,6 +90,33 @@ class CoinAdmin(object):
     客户端持久化比较：后台删除转本地，重新加入覆盖本地资料，保留本地标记。
     本地币种及标记/展开不上传。管理面只允许超管，由统一拦截器鉴权。
     """
+
+    @staticmethod
+    def List(request,
+            target,
+            options=(),
+            channel_credentials=None,
+            call_credentials=None,
+            insecure=False,
+            compression=None,
+            wait_for_ready=None,
+            timeout=None,
+            metadata=None):
+        return grpc.experimental.unary_unary(
+            request,
+            target,
+            '/hi.did.CoinAdmin/List',
+            google_dot_protobuf_dot_empty__pb2.Empty.SerializeToString,
+            hi_dot_did_dot_coin__admin__pb2.CoinAdminListResp.FromString,
+            options,
+            channel_credentials,
+            insecure,
+            call_credentials,
+            compression,
+            wait_for_ready,
+            timeout,
+            metadata,
+            _registered_method=True)
 
     @staticmethod
     def Set(request,

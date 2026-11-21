@@ -84,12 +84,135 @@ class CoinKey extends $pb.GeneratedMessage {
   void clearContract() => $_clearField(2);
 }
 
-class SetCoinReq extends $pb.GeneratedMessage {
-  factory SetCoinReq({
+/// 商户位图的后台配置。bit不下发到普通Coin或客户端本地币种。
+/// 同一币的不同链使用同一bit；0..7为public，8..62为custom。
+/// 已分配位置永久绑定币种，删除目录不将位置让给其他币种。
+class CoinAdminEntry extends $pb.GeneratedMessage {
+  factory CoinAdminEntry({
     $2.Coin? coin,
+    $core.int? merchantBit,
   }) {
     final result = create();
     if (coin != null) result.coin = coin;
+    if (merchantBit != null) result.merchantBit = merchantBit;
+    return result;
+  }
+
+  CoinAdminEntry._();
+
+  factory CoinAdminEntry.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CoinAdminEntry.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CoinAdminEntry',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..aOM<$2.Coin>(1, _omitFieldNames ? '' : 'coin', subBuilder: $2.Coin.create)
+    ..aI(2, _omitFieldNames ? '' : 'merchantBit',
+        fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAdminEntry clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAdminEntry copyWith(void Function(CoinAdminEntry) updates) =>
+      super.copyWith((message) => updates(message as CoinAdminEntry))
+          as CoinAdminEntry;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CoinAdminEntry create() => CoinAdminEntry._();
+  @$core.override
+  CoinAdminEntry createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CoinAdminEntry getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CoinAdminEntry>(create);
+  static CoinAdminEntry? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $2.Coin get coin => $_getN(0);
+  @$pb.TagNumber(1)
+  set coin($2.Coin value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCoin() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCoin() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $2.Coin ensureCoin() => $_ensure(0);
+
+  @$pb.TagNumber(2)
+  $core.int get merchantBit => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set merchantBit($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMerchantBit() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMerchantBit() => $_clearField(2);
+}
+
+class CoinAdminListResp extends $pb.GeneratedMessage {
+  factory CoinAdminListResp({
+    $core.Iterable<CoinAdminEntry>? list,
+  }) {
+    final result = create();
+    if (list != null) result.list.addAll(list);
+    return result;
+  }
+
+  CoinAdminListResp._();
+
+  factory CoinAdminListResp.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory CoinAdminListResp.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CoinAdminListResp',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..pPM<CoinAdminEntry>(1, _omitFieldNames ? '' : 'list',
+        subBuilder: CoinAdminEntry.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAdminListResp clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CoinAdminListResp copyWith(void Function(CoinAdminListResp) updates) =>
+      super.copyWith((message) => updates(message as CoinAdminListResp))
+          as CoinAdminListResp;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static CoinAdminListResp create() => CoinAdminListResp._();
+  @$core.override
+  CoinAdminListResp createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static CoinAdminListResp getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CoinAdminListResp>(create);
+  static CoinAdminListResp? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<CoinAdminEntry> get list => $_getList(0);
+}
+
+class SetCoinReq extends $pb.GeneratedMessage {
+  factory SetCoinReq({
+    $2.Coin? coin,
+    $core.int? merchantBit,
+  }) {
+    final result = create();
+    if (coin != null) result.coin = coin;
+    if (merchantBit != null) result.merchantBit = merchantBit;
     return result;
   }
 
@@ -107,6 +230,8 @@ class SetCoinReq extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
       createEmptyInstance: create)
     ..aOM<$2.Coin>(1, _omitFieldNames ? '' : 'coin', subBuilder: $2.Coin.create)
+    ..aI(2, _omitFieldNames ? '' : 'merchantBit',
+        fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -139,6 +264,16 @@ class SetCoinReq extends $pb.GeneratedMessage {
   void clearCoin() => $_clearField(1);
   @$pb.TagNumber(1)
   $2.Coin ensureCoin() => $_ensure(0);
+
+  /// 新增必传；已有币种不传保持原bit，不能改写已有分配。
+  @$pb.TagNumber(2)
+  $core.int get merchantBit => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set merchantBit($core.int value) => $_setUnsignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasMerchantBit() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearMerchantBit() => $_clearField(2);
 }
 
 class DeleteCoinReq extends $pb.GeneratedMessage {

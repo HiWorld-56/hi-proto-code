@@ -20,6 +20,7 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
+	CoinAdmin_List_FullMethodName   = "/hi.did.CoinAdmin/List"
 	CoinAdmin_Set_FullMethodName    = "/hi.did.CoinAdmin/Set"
 	CoinAdmin_Delete_FullMethodName = "/hi.did.CoinAdmin/Delete"
 )
@@ -32,6 +33,7 @@ const (
 // 客户端持久化比较：后台删除转本地，重新加入覆盖本地资料，保留本地标记。
 // 本地币种及标记/展开不上传。管理面只允许超管，由统一拦截器鉴权。
 type CoinAdminClient interface {
+	List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CoinAdminListResp, error)
 	Set(ctx context.Context, in *SetCoinReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	Delete(ctx context.Context, in *DeleteCoinReq, opts ...grpc.CallOption) (*emptypb.Empty, error)
 }
@@ -42,6 +44,16 @@ type coinAdminClient struct {
 
 func NewCoinAdminClient(cc grpc.ClientConnInterface) CoinAdminClient {
 	return &coinAdminClient{cc}
+}
+
+func (c *coinAdminClient) List(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*CoinAdminListResp, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(CoinAdminListResp)
+	err := c.cc.Invoke(ctx, CoinAdmin_List_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
 }
 
 func (c *coinAdminClient) Set(ctx context.Context, in *SetCoinReq, opts ...grpc.CallOption) (*emptypb.Empty, error) {
@@ -72,6 +84,7 @@ func (c *coinAdminClient) Delete(ctx context.Context, in *DeleteCoinReq, opts ..
 // 客户端持久化比较：后台删除转本地，重新加入覆盖本地资料，保留本地标记。
 // 本地币种及标记/展开不上传。管理面只允许超管，由统一拦截器鉴权。
 type CoinAdminServer interface {
+	List(context.Context, *emptypb.Empty) (*CoinAdminListResp, error)
 	Set(context.Context, *SetCoinReq) (*emptypb.Empty, error)
 	Delete(context.Context, *DeleteCoinReq) (*emptypb.Empty, error)
 }
@@ -83,6 +96,9 @@ type CoinAdminServer interface {
 // pointer dereference when methods are called.
 type UnimplementedCoinAdminServer struct{}
 
+func (UnimplementedCoinAdminServer) List(context.Context, *emptypb.Empty) (*CoinAdminListResp, error) {
+	return nil, status.Error(codes.Unimplemented, "method List not implemented")
+}
 func (UnimplementedCoinAdminServer) Set(context.Context, *SetCoinReq) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method Set not implemented")
 }
@@ -107,6 +123,24 @@ func RegisterCoinAdminServer(s grpc.ServiceRegistrar, srv CoinAdminServer) {
 		t.testEmbeddedByValue()
 	}
 	s.RegisterService(&CoinAdmin_ServiceDesc, srv)
+}
+
+func _CoinAdmin_List_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(emptypb.Empty)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(CoinAdminServer).List(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: CoinAdmin_List_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(CoinAdminServer).List(ctx, req.(*emptypb.Empty))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _CoinAdmin_Set_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -152,6 +186,10 @@ var CoinAdmin_ServiceDesc = grpc.ServiceDesc{
 	ServiceName: "hi.did.CoinAdmin",
 	HandlerType: (*CoinAdminServer)(nil),
 	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "List",
+			Handler:    _CoinAdmin_List_Handler,
+		},
 		{
 			MethodName: "Set",
 			Handler:    _CoinAdmin_Set_Handler,

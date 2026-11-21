@@ -1196,14 +1196,22 @@ pub struct MerchantGetResp {
 /// 够不着别人;真正的理由是资金字段需要比展示配置更强的保护。)
 ///
 /// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
+/// 商户明确提交的完整支持币种集合。规范名引用后台目录，不传此对象不改位图。
+/// 提交对象且names为空则清空所有链的支持位；public同样允许商户取消。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct MerchantCoinSelection {
+    #[prost(string, repeated, tag = "1")]
+    pub names: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct MerchantSetReq {
     #[prost(string, optional, tag = "1")]
     pub name: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "2")]
     pub logo: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, repeated, tag = "3")]
-    pub coins: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    /// 使用新字段号，避免旧的字符串列表被当作嵌套对象解码。
+    #[prost(message, optional, tag = "6")]
+    pub coins: ::core::option::Option<MerchantCoinSelection>,
     #[prost(string, optional, tag = "4")]
     pub endpoint: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(string, optional, tag = "5")]
@@ -4175,12 +4183,30 @@ pub struct CoinKey {
     #[prost(string, optional, tag = "2")]
     pub contract: ::core::option::Option<::prost::alloc::string::String>,
 }
+/// 商户位图的后台配置。bit不下发到普通Coin或客户端本地币种。
+/// 同一币的不同链使用同一bit；0..7为public，8..62为custom。
+/// 已分配位置永久绑定币种，删除目录不将位置让给其他币种。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct CoinAdminEntry {
+    #[prost(message, optional, tag = "1")]
+    pub coin: ::core::option::Option<Coin>,
+    #[prost(uint32, optional, tag = "2")]
+    pub merchant_bit: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct CoinAdminListResp {
+    #[prost(message, repeated, tag = "1")]
+    pub list: ::prost::alloc::vec::Vec<CoinAdminEntry>,
+}
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct SetCoinReq {
     /// 完整替换该身份的目录资料；name/chain/decimals/category必填，icon不传表示清除。
     /// 现有身份的name保持不变，避免重写付款/行情业务键。
     #[prost(message, optional, tag = "1")]
     pub coin: ::core::option::Option<Coin>,
+    /// 新增必传；已有币种不传保持原bit，不能改写已有分配。
+    #[prost(uint32, optional, tag = "2")]
+    pub merchant_bit: ::core::option::Option<u32>,
 }
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct DeleteCoinReq {
@@ -4280,6 +4306,27 @@ pub mod coin_admin_client {
         pub fn max_encoding_message_size(mut self, limit: usize) -> Self {
             self.inner = self.inner.max_encoding_message_size(limit);
             self
+        }
+        pub async fn list(
+            &mut self,
+            request: impl tonic::IntoRequest<::pbjson_types::Empty>,
+        ) -> std::result::Result<
+            tonic::Response<super::CoinAdminListResp>,
+            tonic::Status,
+        > {
+            self.inner
+                .ready()
+                .await
+                .map_err(|e| {
+                    tonic::Status::unknown(
+                        format!("Service was not ready: {}", e.into()),
+                    )
+                })?;
+            let codec = tonic_prost::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/hi.did.CoinAdmin/List");
+            let mut req = request.into_request();
+            req.extensions_mut().insert(GrpcMethod::new("hi.did.CoinAdmin", "List"));
+            self.inner.unary(req, path, codec).await
         }
         pub async fn set(
             &mut self,

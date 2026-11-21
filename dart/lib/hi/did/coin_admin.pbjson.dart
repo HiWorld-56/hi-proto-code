@@ -52,6 +52,64 @@ final $typed_data.Uint8List coinKeyDescriptor = $convert.base64Decode(
     'VhcHRvc0gAUgVjaGFpbogBARIrCghjb250cmFjdBgCIAEoCUIKukgHcgUQARiAAUgBUghjb250'
     'cmFjdIgBAUIICgZfY2hhaW5CCwoJX2NvbnRyYWN0');
 
+@$core.Deprecated('Use coinAdminEntryDescriptor instead')
+const CoinAdminEntry$json = {
+  '1': 'CoinAdminEntry',
+  '2': [
+    {
+      '1': 'coin',
+      '3': 1,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.Coin',
+      '8': {},
+      '10': 'coin'
+    },
+    {
+      '1': 'merchant_bit',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'merchantBit',
+      '17': true
+    },
+  ],
+  '7': {},
+  '8': [
+    {'1': '_merchant_bit'},
+  ],
+};
+
+/// Descriptor for `CoinAdminEntry`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List coinAdminEntryDescriptor = $convert.base64Decode(
+    'Cg5Db2luQWRtaW5FbnRyeRImCgRjb2luGAEgASgLMgwuaGkuZGlkLkNvaW5CBJC1GANSBGNvaW'
+    '4SLAoMbWVyY2hhbnRfYml0GAIgASgNQgSQtRgDSABSC21lcmNoYW50Qml0iAEBOgSYtRgDQg8K'
+    'DV9tZXJjaGFudF9iaXQ=');
+
+@$core.Deprecated('Use coinAdminListRespDescriptor instead')
+const CoinAdminListResp$json = {
+  '1': 'CoinAdminListResp',
+  '2': [
+    {
+      '1': 'list',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.did.CoinAdminEntry',
+      '8': {},
+      '10': 'list'
+    },
+  ],
+  '7': {},
+};
+
+/// Descriptor for `CoinAdminListResp`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List coinAdminListRespDescriptor = $convert.base64Decode(
+    'ChFDb2luQWRtaW5MaXN0UmVzcBIwCgRsaXN0GAEgAygLMhYuaGkuZGlkLkNvaW5BZG1pbkVudH'
+    'J5QgSQtRgDUgRsaXN0OgSYtRgD');
+
 @$core.Deprecated('Use setCoinReqDescriptor instead')
 const SetCoinReq$json = {
   '1': 'SetCoinReq',
@@ -65,12 +123,27 @@ const SetCoinReq$json = {
       '8': {},
       '10': 'coin'
     },
+    {
+      '1': 'merchant_bit',
+      '3': 2,
+      '4': 1,
+      '5': 13,
+      '8': {},
+      '9': 0,
+      '10': 'merchantBit',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_merchant_bit'},
   ],
 };
 
 /// Descriptor for `SetCoinReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List setCoinReqDescriptor = $convert.base64Decode(
-    'CgpTZXRDb2luUmVxEigKBGNvaW4YASABKAsyDC5oaS5kaWQuQ29pbkIGukgDyAEBUgRjb2lu');
+    'CgpTZXRDb2luUmVxEigKBGNvaW4YASABKAsyDC5oaS5kaWQuQ29pbkIGukgDyAEBUgRjb2luEi'
+    '8KDG1lcmNoYW50X2JpdBgCIAEoDUIHukgEKgIYPkgAUgttZXJjaGFudEJpdIgBAUIPCg1fbWVy'
+    'Y2hhbnRfYml0');
 
 @$core.Deprecated('Use deleteCoinReqDescriptor instead')
 const DeleteCoinReq$json = {

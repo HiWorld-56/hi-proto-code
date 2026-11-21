@@ -15,9 +15,9 @@ import 'dart:core' as $core;
 
 import 'package:grpc/service_api.dart' as $grpc;
 import 'package:protobuf/protobuf.dart' as $pb;
-import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $1;
+import 'package:protobuf/well_known_types/google/protobuf/empty.pb.dart' as $0;
 
-import 'coin_admin.pb.dart' as $0;
+import 'coin_admin.pb.dart' as $1;
 
 export 'coin_admin.pb.dart';
 
@@ -36,15 +36,22 @@ class CoinAdminClient extends $grpc.Client {
 
   CoinAdminClient(super.channel, {super.options, super.interceptors});
 
-  $grpc.ResponseFuture<$1.Empty> set(
-    $0.SetCoinReq request, {
+  $grpc.ResponseFuture<$1.CoinAdminListResp> list(
+    $0.Empty request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$list, request, options: options);
+  }
+
+  $grpc.ResponseFuture<$0.Empty> set(
+    $1.SetCoinReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$set, request, options: options);
   }
 
-  $grpc.ResponseFuture<$1.Empty> delete(
-    $0.DeleteCoinReq request, {
+  $grpc.ResponseFuture<$0.Empty> delete(
+    $1.DeleteCoinReq request, {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$delete, request, options: options);
@@ -52,14 +59,18 @@ class CoinAdminClient extends $grpc.Client {
 
   // method descriptors
 
-  static final _$set = $grpc.ClientMethod<$0.SetCoinReq, $1.Empty>(
+  static final _$list = $grpc.ClientMethod<$0.Empty, $1.CoinAdminListResp>(
+      '/hi.did.CoinAdmin/List',
+      ($0.Empty value) => value.writeToBuffer(),
+      $1.CoinAdminListResp.fromBuffer);
+  static final _$set = $grpc.ClientMethod<$1.SetCoinReq, $0.Empty>(
       '/hi.did.CoinAdmin/Set',
-      ($0.SetCoinReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
-  static final _$delete = $grpc.ClientMethod<$0.DeleteCoinReq, $1.Empty>(
+      ($1.SetCoinReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
+  static final _$delete = $grpc.ClientMethod<$1.DeleteCoinReq, $0.Empty>(
       '/hi.did.CoinAdmin/Delete',
-      ($0.DeleteCoinReq value) => value.writeToBuffer(),
-      $1.Empty.fromBuffer);
+      ($1.DeleteCoinReq value) => value.writeToBuffer(),
+      $0.Empty.fromBuffer);
 }
 
 @$pb.GrpcServiceName('hi.did.CoinAdmin')
@@ -67,34 +78,49 @@ abstract class CoinAdminServiceBase extends $grpc.Service {
   $core.String get $name => 'hi.did.CoinAdmin';
 
   CoinAdminServiceBase() {
-    $addMethod($grpc.ServiceMethod<$0.SetCoinReq, $1.Empty>(
+    $addMethod($grpc.ServiceMethod<$0.Empty, $1.CoinAdminListResp>(
+        'List',
+        list_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) => $0.Empty.fromBuffer(value),
+        ($1.CoinAdminListResp value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.SetCoinReq, $0.Empty>(
         'Set',
         set_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.SetCoinReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
-    $addMethod($grpc.ServiceMethod<$0.DeleteCoinReq, $1.Empty>(
+        ($core.List<$core.int> value) => $1.SetCoinReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$1.DeleteCoinReq, $0.Empty>(
         'Delete',
         delete_Pre,
         false,
         false,
-        ($core.List<$core.int> value) => $0.DeleteCoinReq.fromBuffer(value),
-        ($1.Empty value) => value.writeToBuffer()));
+        ($core.List<$core.int> value) => $1.DeleteCoinReq.fromBuffer(value),
+        ($0.Empty value) => value.writeToBuffer()));
   }
 
-  $async.Future<$1.Empty> set_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.SetCoinReq> $request) async {
+  $async.Future<$1.CoinAdminListResp> list_Pre(
+      $grpc.ServiceCall $call, $async.Future<$0.Empty> $request) async {
+    return list($call, await $request);
+  }
+
+  $async.Future<$1.CoinAdminListResp> list(
+      $grpc.ServiceCall call, $0.Empty request);
+
+  $async.Future<$0.Empty> set_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.SetCoinReq> $request) async {
     return set($call, await $request);
   }
 
-  $async.Future<$1.Empty> set($grpc.ServiceCall call, $0.SetCoinReq request);
+  $async.Future<$0.Empty> set($grpc.ServiceCall call, $1.SetCoinReq request);
 
-  $async.Future<$1.Empty> delete_Pre(
-      $grpc.ServiceCall $call, $async.Future<$0.DeleteCoinReq> $request) async {
+  $async.Future<$0.Empty> delete_Pre(
+      $grpc.ServiceCall $call, $async.Future<$1.DeleteCoinReq> $request) async {
     return delete($call, await $request);
   }
 
-  $async.Future<$1.Empty> delete(
-      $grpc.ServiceCall call, $0.DeleteCoinReq request);
+  $async.Future<$0.Empty> delete(
+      $grpc.ServiceCall call, $1.DeleteCoinReq request);
 }

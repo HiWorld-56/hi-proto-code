@@ -243,20 +243,71 @@ class MerchantGetResp extends $pb.GeneratedMessage {
 ///     够不着别人;真正的理由是资金字段需要比展示配置更强的保护。)
 ///
 /// comment 是超管备注(见 MerchantManage.Edit),商户自服务不该能写。
+/// 商户明确提交的完整支持币种集合。规范名引用后台目录，不传此对象不改位图。
+/// 提交对象且names为空则清空所有链的支持位；public同样允许商户取消。
+class MerchantCoinSelection extends $pb.GeneratedMessage {
+  factory MerchantCoinSelection({
+    $core.Iterable<$core.String>? names,
+  }) {
+    final result = create();
+    if (names != null) result.names.addAll(names);
+    return result;
+  }
+
+  MerchantCoinSelection._();
+
+  factory MerchantCoinSelection.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory MerchantCoinSelection.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'MerchantCoinSelection',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.did'),
+      createEmptyInstance: create)
+    ..pPS(1, _omitFieldNames ? '' : 'names')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantCoinSelection clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  MerchantCoinSelection copyWith(
+          void Function(MerchantCoinSelection) updates) =>
+      super.copyWith((message) => updates(message as MerchantCoinSelection))
+          as MerchantCoinSelection;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static MerchantCoinSelection create() => MerchantCoinSelection._();
+  @$core.override
+  MerchantCoinSelection createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static MerchantCoinSelection getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<MerchantCoinSelection>(create);
+  static MerchantCoinSelection? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<$core.String> get names => $_getList(0);
+}
+
 class MerchantSetReq extends $pb.GeneratedMessage {
   factory MerchantSetReq({
     $core.String? name,
     $core.String? logo,
-    $core.Iterable<$core.String>? coins,
     $core.String? endpoint,
     $core.String? scheme,
+    MerchantCoinSelection? coins,
   }) {
     final result = create();
     if (name != null) result.name = name;
     if (logo != null) result.logo = logo;
-    if (coins != null) result.coins.addAll(coins);
     if (endpoint != null) result.endpoint = endpoint;
     if (scheme != null) result.scheme = scheme;
+    if (coins != null) result.coins = coins;
     return result;
   }
 
@@ -275,9 +326,10 @@ class MerchantSetReq extends $pb.GeneratedMessage {
       createEmptyInstance: create)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aOS(2, _omitFieldNames ? '' : 'logo')
-    ..pPS(3, _omitFieldNames ? '' : 'coins')
     ..aOS(4, _omitFieldNames ? '' : 'endpoint')
     ..aOS(5, _omitFieldNames ? '' : 'scheme')
+    ..aOM<MerchantCoinSelection>(6, _omitFieldNames ? '' : 'coins',
+        subBuilder: MerchantCoinSelection.create)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -317,26 +369,35 @@ class MerchantSetReq extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearLogo() => $_clearField(2);
 
-  @$pb.TagNumber(3)
-  $pb.PbList<$core.String> get coins => $_getList(2);
-
   @$pb.TagNumber(4)
-  $core.String get endpoint => $_getSZ(3);
+  $core.String get endpoint => $_getSZ(2);
   @$pb.TagNumber(4)
-  set endpoint($core.String value) => $_setString(3, value);
+  set endpoint($core.String value) => $_setString(2, value);
   @$pb.TagNumber(4)
-  $core.bool hasEndpoint() => $_has(3);
+  $core.bool hasEndpoint() => $_has(2);
   @$pb.TagNumber(4)
   void clearEndpoint() => $_clearField(4);
 
   @$pb.TagNumber(5)
-  $core.String get scheme => $_getSZ(4);
+  $core.String get scheme => $_getSZ(3);
   @$pb.TagNumber(5)
-  set scheme($core.String value) => $_setString(4, value);
+  set scheme($core.String value) => $_setString(3, value);
   @$pb.TagNumber(5)
-  $core.bool hasScheme() => $_has(4);
+  $core.bool hasScheme() => $_has(3);
   @$pb.TagNumber(5)
   void clearScheme() => $_clearField(5);
+
+  /// 使用新字段号，避免旧的字符串列表被当作嵌套对象解码。
+  @$pb.TagNumber(6)
+  MerchantCoinSelection get coins => $_getN(4);
+  @$pb.TagNumber(6)
+  set coins(MerchantCoinSelection value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCoins() => $_has(4);
+  @$pb.TagNumber(6)
+  void clearCoins() => $_clearField(6);
+  @$pb.TagNumber(6)
+  MerchantCoinSelection ensureCoins() => $_ensure(4);
 }
 
 class MerchantListResp extends $pb.GeneratedMessage {

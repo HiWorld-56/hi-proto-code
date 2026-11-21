@@ -77,18 +77,119 @@ func (x *CoinKey) GetContract() string {
 	return ""
 }
 
+// 商户位图的后台配置。bit不下发到普通Coin或客户端本地币种。
+// 同一币的不同链使用同一bit；0..7为public，8..62为custom。
+// 已分配位置永久绑定币种，删除目录不将位置让给其他币种。
+type CoinAdminEntry struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Coin          *Coin                  `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
+	MerchantBit   *uint32                `protobuf:"varint,2,opt,name=merchant_bit,json=merchantBit,proto3,oneof" json:"merchant_bit,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CoinAdminEntry) Reset() {
+	*x = CoinAdminEntry{}
+	mi := &file_hi_did_coin_admin_proto_msgTypes[1]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CoinAdminEntry) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CoinAdminEntry) ProtoMessage() {}
+
+func (x *CoinAdminEntry) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_coin_admin_proto_msgTypes[1]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CoinAdminEntry.ProtoReflect.Descriptor instead.
+func (*CoinAdminEntry) Descriptor() ([]byte, []int) {
+	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{1}
+}
+
+func (x *CoinAdminEntry) GetCoin() *Coin {
+	if x != nil {
+		return x.Coin
+	}
+	return nil
+}
+
+func (x *CoinAdminEntry) GetMerchantBit() uint32 {
+	if x != nil && x.MerchantBit != nil {
+		return *x.MerchantBit
+	}
+	return 0
+}
+
+type CoinAdminListResp struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	List          []*CoinAdminEntry      `protobuf:"bytes,1,rep,name=list,proto3" json:"list,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *CoinAdminListResp) Reset() {
+	*x = CoinAdminListResp{}
+	mi := &file_hi_did_coin_admin_proto_msgTypes[2]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CoinAdminListResp) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CoinAdminListResp) ProtoMessage() {}
+
+func (x *CoinAdminListResp) ProtoReflect() protoreflect.Message {
+	mi := &file_hi_did_coin_admin_proto_msgTypes[2]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CoinAdminListResp.ProtoReflect.Descriptor instead.
+func (*CoinAdminListResp) Descriptor() ([]byte, []int) {
+	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{2}
+}
+
+func (x *CoinAdminListResp) GetList() []*CoinAdminEntry {
+	if x != nil {
+		return x.List
+	}
+	return nil
+}
+
 type SetCoinReq struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// 完整替换该身份的目录资料；name/chain/decimals/category必填，icon不传表示清除。
 	// 现有身份的name保持不变，避免重写付款/行情业务键。
-	Coin          *Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
+	Coin *Coin `protobuf:"bytes,1,opt,name=coin,proto3" json:"coin,omitempty"`
+	// 新增必传；已有币种不传保持原bit，不能改写已有分配。
+	MerchantBit   *uint32 `protobuf:"varint,2,opt,name=merchant_bit,json=merchantBit,proto3,oneof" json:"merchant_bit,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
 
 func (x *SetCoinReq) Reset() {
 	*x = SetCoinReq{}
-	mi := &file_hi_did_coin_admin_proto_msgTypes[1]
+	mi := &file_hi_did_coin_admin_proto_msgTypes[3]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -100,7 +201,7 @@ func (x *SetCoinReq) String() string {
 func (*SetCoinReq) ProtoMessage() {}
 
 func (x *SetCoinReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_coin_admin_proto_msgTypes[1]
+	mi := &file_hi_did_coin_admin_proto_msgTypes[3]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -113,7 +214,7 @@ func (x *SetCoinReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetCoinReq.ProtoReflect.Descriptor instead.
 func (*SetCoinReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{1}
+	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{3}
 }
 
 func (x *SetCoinReq) GetCoin() *Coin {
@@ -121,6 +222,13 @@ func (x *SetCoinReq) GetCoin() *Coin {
 		return x.Coin
 	}
 	return nil
+}
+
+func (x *SetCoinReq) GetMerchantBit() uint32 {
+	if x != nil && x.MerchantBit != nil {
+		return *x.MerchantBit
+	}
+	return 0
 }
 
 type DeleteCoinReq struct {
@@ -132,7 +240,7 @@ type DeleteCoinReq struct {
 
 func (x *DeleteCoinReq) Reset() {
 	*x = DeleteCoinReq{}
-	mi := &file_hi_did_coin_admin_proto_msgTypes[2]
+	mi := &file_hi_did_coin_admin_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -144,7 +252,7 @@ func (x *DeleteCoinReq) String() string {
 func (*DeleteCoinReq) ProtoMessage() {}
 
 func (x *DeleteCoinReq) ProtoReflect() protoreflect.Message {
-	mi := &file_hi_did_coin_admin_proto_msgTypes[2]
+	mi := &file_hi_did_coin_admin_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -157,7 +265,7 @@ func (x *DeleteCoinReq) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteCoinReq.ProtoReflect.Descriptor instead.
 func (*DeleteCoinReq) Descriptor() ([]byte, []int) {
-	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{2}
+	return file_hi_did_coin_admin_proto_rawDescGZIP(), []int{4}
 }
 
 func (x *DeleteCoinReq) GetCoin() *CoinKey {
@@ -177,13 +285,22 @@ const file_hi_did_coin_admin_proto_rawDesc = "" +
 	"\bcontract\x18\x02 \x01(\tB\n" +
 	"\xbaH\ar\x05\x10\x01\x18\x80\x01H\x01R\bcontract\x88\x01\x01B\b\n" +
 	"\x06_chainB\v\n" +
-	"\t_contract\"6\n" +
+	"\t_contract\"}\n" +
+	"\x0eCoinAdminEntry\x12&\n" +
+	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x04\x90\xb5\x18\x03R\x04coin\x12,\n" +
+	"\fmerchant_bit\x18\x02 \x01(\rB\x04\x90\xb5\x18\x03H\x00R\vmerchantBit\x88\x01\x01:\x04\x98\xb5\x18\x03B\x0f\n" +
+	"\r_merchant_bit\"K\n" +
+	"\x11CoinAdminListResp\x120\n" +
+	"\x04list\x18\x01 \x03(\v2\x16.hi.did.CoinAdminEntryB\x04\x90\xb5\x18\x03R\x04list:\x04\x98\xb5\x18\x03\"x\n" +
 	"\n" +
 	"SetCoinReq\x12(\n" +
-	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x06\xbaH\x03\xc8\x01\x01R\x04coin\"<\n" +
+	"\x04coin\x18\x01 \x01(\v2\f.hi.did.CoinB\x06\xbaH\x03\xc8\x01\x01R\x04coin\x12/\n" +
+	"\fmerchant_bit\x18\x02 \x01(\rB\a\xbaH\x04*\x02\x18>H\x00R\vmerchantBit\x88\x01\x01B\x0f\n" +
+	"\r_merchant_bit\"<\n" +
 	"\rDeleteCoinReq\x12+\n" +
-	"\x04coin\x18\x01 \x01(\v2\x0f.hi.did.CoinKeyB\x06\xbaH\x03\xc8\x01\x01R\x04coin2\x85\x01\n" +
-	"\tCoinAdmin\x128\n" +
+	"\x04coin\x18\x01 \x01(\v2\x0f.hi.did.CoinKeyB\x06\xbaH\x03\xc8\x01\x01R\x04coin2\xc7\x01\n" +
+	"\tCoinAdmin\x12@\n" +
+	"\x04List\x12\x16.google.protobuf.Empty\x1a\x19.hi.did.CoinAdminListResp\"\x05\x8a\xb5\x18\x01\x04\x128\n" +
 	"\x03Set\x12\x12.hi.did.SetCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04\x12>\n" +
 	"\x06Delete\x12\x15.hi.did.DeleteCoinReq\x1a\x16.google.protobuf.Empty\"\x05\x8a\xb5\x18\x01\x04B\x7f\n" +
 	"\n" +
@@ -201,26 +318,32 @@ func file_hi_did_coin_admin_proto_rawDescGZIP() []byte {
 	return file_hi_did_coin_admin_proto_rawDescData
 }
 
-var file_hi_did_coin_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 3)
+var file_hi_did_coin_admin_proto_msgTypes = make([]protoimpl.MessageInfo, 5)
 var file_hi_did_coin_admin_proto_goTypes = []any{
-	(*CoinKey)(nil),       // 0: hi.did.CoinKey
-	(*SetCoinReq)(nil),    // 1: hi.did.SetCoinReq
-	(*DeleteCoinReq)(nil), // 2: hi.did.DeleteCoinReq
-	(*Coin)(nil),          // 3: hi.did.Coin
-	(*emptypb.Empty)(nil), // 4: google.protobuf.Empty
+	(*CoinKey)(nil),           // 0: hi.did.CoinKey
+	(*CoinAdminEntry)(nil),    // 1: hi.did.CoinAdminEntry
+	(*CoinAdminListResp)(nil), // 2: hi.did.CoinAdminListResp
+	(*SetCoinReq)(nil),        // 3: hi.did.SetCoinReq
+	(*DeleteCoinReq)(nil),     // 4: hi.did.DeleteCoinReq
+	(*Coin)(nil),              // 5: hi.did.Coin
+	(*emptypb.Empty)(nil),     // 6: google.protobuf.Empty
 }
 var file_hi_did_coin_admin_proto_depIdxs = []int32{
-	3, // 0: hi.did.SetCoinReq.coin:type_name -> hi.did.Coin
-	0, // 1: hi.did.DeleteCoinReq.coin:type_name -> hi.did.CoinKey
-	1, // 2: hi.did.CoinAdmin.Set:input_type -> hi.did.SetCoinReq
-	2, // 3: hi.did.CoinAdmin.Delete:input_type -> hi.did.DeleteCoinReq
-	4, // 4: hi.did.CoinAdmin.Set:output_type -> google.protobuf.Empty
-	4, // 5: hi.did.CoinAdmin.Delete:output_type -> google.protobuf.Empty
-	4, // [4:6] is the sub-list for method output_type
-	2, // [2:4] is the sub-list for method input_type
-	2, // [2:2] is the sub-list for extension type_name
-	2, // [2:2] is the sub-list for extension extendee
-	0, // [0:2] is the sub-list for field type_name
+	5, // 0: hi.did.CoinAdminEntry.coin:type_name -> hi.did.Coin
+	1, // 1: hi.did.CoinAdminListResp.list:type_name -> hi.did.CoinAdminEntry
+	5, // 2: hi.did.SetCoinReq.coin:type_name -> hi.did.Coin
+	0, // 3: hi.did.DeleteCoinReq.coin:type_name -> hi.did.CoinKey
+	6, // 4: hi.did.CoinAdmin.List:input_type -> google.protobuf.Empty
+	3, // 5: hi.did.CoinAdmin.Set:input_type -> hi.did.SetCoinReq
+	4, // 6: hi.did.CoinAdmin.Delete:input_type -> hi.did.DeleteCoinReq
+	2, // 7: hi.did.CoinAdmin.List:output_type -> hi.did.CoinAdminListResp
+	6, // 8: hi.did.CoinAdmin.Set:output_type -> google.protobuf.Empty
+	6, // 9: hi.did.CoinAdmin.Delete:output_type -> google.protobuf.Empty
+	7, // [7:10] is the sub-list for method output_type
+	4, // [4:7] is the sub-list for method input_type
+	4, // [4:4] is the sub-list for extension type_name
+	4, // [4:4] is the sub-list for extension extendee
+	0, // [0:4] is the sub-list for field type_name
 }
 
 func init() { file_hi_did_coin_admin_proto_init() }
@@ -230,13 +353,15 @@ func file_hi_did_coin_admin_proto_init() {
 	}
 	file_hi_did_base_proto_init()
 	file_hi_did_coin_admin_proto_msgTypes[0].OneofWrappers = []any{}
+	file_hi_did_coin_admin_proto_msgTypes[1].OneofWrappers = []any{}
+	file_hi_did_coin_admin_proto_msgTypes[3].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_hi_did_coin_admin_proto_rawDesc), len(file_hi_did_coin_admin_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   3,
+			NumMessages:   5,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

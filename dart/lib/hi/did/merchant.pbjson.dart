@@ -168,13 +168,33 @@ final $typed_data.Uint8List merchantGetRespDescriptor = $convert.base64Decode(
     'Cg9NZXJjaGFudEdldFJlc3ASLgoEaW5mbxgBIAEoCzIULmhpLmRpZC5NZXJjaGFudEluZm9CBJ'
     'C1GAJSBGluZm86BJi1GAI=');
 
+@$core.Deprecated('Use merchantCoinSelectionDescriptor instead')
+const MerchantCoinSelection$json = {
+  '1': 'MerchantCoinSelection',
+  '2': [
+    {'1': 'names', '3': 1, '4': 3, '5': 9, '8': {}, '10': 'names'},
+  ],
+};
+
+/// Descriptor for `MerchantCoinSelection`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List merchantCoinSelectionDescriptor = $convert.base64Decode(
+    'ChVNZXJjaGFudENvaW5TZWxlY3Rpb24SJgoFbmFtZXMYASADKAlCELpIDZIBChgBIgZyBBABGE'
+    'BSBW5hbWVz');
+
 @$core.Deprecated('Use merchantSetReqDescriptor instead')
 const MerchantSetReq$json = {
   '1': 'MerchantSetReq',
   '2': [
     {'1': 'name', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'name', '17': true},
     {'1': 'logo', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'logo', '17': true},
-    {'1': 'coins', '3': 3, '4': 3, '5': 9, '10': 'coins'},
+    {
+      '1': 'coins',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.did.MerchantCoinSelection',
+      '10': 'coins'
+    },
     {
       '1': 'endpoint',
       '3': 4,
@@ -197,9 +217,10 @@ const MerchantSetReq$json = {
 /// Descriptor for `MerchantSetReq`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List merchantSetReqDescriptor = $convert.base64Decode(
     'Cg5NZXJjaGFudFNldFJlcRIXCgRuYW1lGAEgASgJSABSBG5hbWWIAQESFwoEbG9nbxgCIAEoCU'
-    'gBUgRsb2dviAEBEhQKBWNvaW5zGAMgAygJUgVjb2lucxIfCghlbmRwb2ludBgEIAEoCUgCUghl'
-    'bmRwb2ludIgBARIbCgZzY2hlbWUYBSABKAlIA1IGc2NoZW1liAEBQgcKBV9uYW1lQgcKBV9sb2'
-    'dvQgsKCV9lbmRwb2ludEIJCgdfc2NoZW1l');
+    'gBUgRsb2dviAEBEjMKBWNvaW5zGAYgASgLMh0uaGkuZGlkLk1lcmNoYW50Q29pblNlbGVjdGlv'
+    'blIFY29pbnMSHwoIZW5kcG9pbnQYBCABKAlIAlIIZW5kcG9pbnSIAQESGwoGc2NoZW1lGAUgAS'
+    'gJSANSBnNjaGVtZYgBAUIHCgVfbmFtZUIHCgVfbG9nb0ILCglfZW5kcG9pbnRCCQoHX3NjaGVt'
+    'ZQ==');
 
 @$core.Deprecated('Use merchantListRespDescriptor instead')
 const MerchantListResp$json = {
