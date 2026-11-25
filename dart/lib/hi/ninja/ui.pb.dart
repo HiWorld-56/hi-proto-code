@@ -108,6 +108,66 @@ class RobotInit extends $pb.GeneratedMessage {
   $0.Entity ensureMaster() => $_ensure(1);
 }
 
+/// face 的代理模式显示快照；brain 是当前运行期设置的唯一所有者。
+/// agent 不传 = 未启用。联系人复用完整 Entity，不按人/机器人区分。
+/// 仅用于本地屏幕交互；IM 代理收发仍使用 hi.club.Message 的既有关联规范。
+class ReplyProxyView extends $pb.GeneratedMessage {
+  factory ReplyProxyView({
+    $0.Entity? agent,
+  }) {
+    final result = create();
+    if (agent != null) result.agent = agent;
+    return result;
+  }
+
+  ReplyProxyView._();
+
+  factory ReplyProxyView.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromBuffer(data, registry);
+  factory ReplyProxyView.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      create()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ReplyProxyView',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
+      createEmptyInstance: create)
+    ..aOM<$0.Entity>(1, _omitFieldNames ? '' : 'agent',
+        subBuilder: $0.Entity.create)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReplyProxyView clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ReplyProxyView copyWith(void Function(ReplyProxyView) updates) =>
+      super.copyWith((message) => updates(message as ReplyProxyView))
+          as ReplyProxyView;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  static ReplyProxyView create() => ReplyProxyView._();
+  @$core.override
+  ReplyProxyView createEmptyInstance() => create();
+  @$core.pragma('dart2js:noInline')
+  static ReplyProxyView getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ReplyProxyView>(create);
+  static ReplyProxyView? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $0.Entity get agent => $_getN(0);
+  @$pb.TagNumber(1)
+  set agent($0.Entity value) => $_setField(1, value);
+  @$pb.TagNumber(1)
+  $core.bool hasAgent() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearAgent() => $_clearField(1);
+  @$pb.TagNumber(1)
+  $0.Entity ensureAgent() => $_ensure(0);
+}
+
 /// 好友列表（全量，初始化时推送）
 class FriendList extends $pb.GeneratedMessage {
   factory FriendList({
@@ -1300,6 +1360,7 @@ enum BrainToFace_Cmd {
   voiceTurn,
   voiceCue,
   audioKeepAwake,
+  replyProxy,
   control,
   notSet
 }
@@ -1345,6 +1406,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     VoiceTurn? voiceTurn,
     VoiceCue? voiceCue,
     AudioKeepAwakeSet? audioKeepAwake,
+    ReplyProxyView? replyProxy,
     $12.ModuleSession? session,
     $12.BrainToModuleControl? control,
   }) {
@@ -1395,6 +1457,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     if (voiceTurn != null) result.voiceTurn = voiceTurn;
     if (voiceCue != null) result.voiceCue = voiceCue;
     if (audioKeepAwake != null) result.audioKeepAwake = audioKeepAwake;
+    if (replyProxy != null) result.replyProxy = replyProxy;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -1449,6 +1512,7 @@ class BrainToFace extends $pb.GeneratedMessage {
     44: BrainToFace_Cmd.voiceTurn,
     45: BrainToFace_Cmd.voiceCue,
     46: BrainToFace_Cmd.audioKeepAwake,
+    47: BrainToFace_Cmd.replyProxy,
     100: BrainToFace_Cmd.control,
     0: BrainToFace_Cmd.notSet
   };
@@ -1496,6 +1560,7 @@ class BrainToFace extends $pb.GeneratedMessage {
       44,
       45,
       46,
+      47,
       100
     ])
     ..aOM<RobotInit>(1, _omitFieldNames ? '' : 'initRobot',
@@ -1580,6 +1645,8 @@ class BrainToFace extends $pb.GeneratedMessage {
         subBuilder: VoiceCue.create)
     ..aOM<AudioKeepAwakeSet>(46, _omitFieldNames ? '' : 'audioKeepAwake',
         subBuilder: AudioKeepAwakeSet.create)
+    ..aOM<ReplyProxyView>(47, _omitFieldNames ? '' : 'replyProxy',
+        subBuilder: ReplyProxyView.create)
     ..aOM<$12.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $12.ModuleSession.create)
     ..aOM<$12.BrainToModuleControl>(100, _omitFieldNames ? '' : 'control',
@@ -1644,6 +1711,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
   @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
   @$pb.TagNumber(100)
   BrainToFace_Cmd whichCmd() => _BrainToFace_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -1685,6 +1753,7 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
   @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2140,27 +2209,38 @@ class BrainToFace extends $pb.GeneratedMessage {
   @$pb.TagNumber(46)
   AudioKeepAwakeSet ensureAudioKeepAwake() => $_ensure(38);
 
+  @$pb.TagNumber(47)
+  ReplyProxyView get replyProxy => $_getN(39);
+  @$pb.TagNumber(47)
+  set replyProxy(ReplyProxyView value) => $_setField(47, value);
+  @$pb.TagNumber(47)
+  $core.bool hasReplyProxy() => $_has(39);
+  @$pb.TagNumber(47)
+  void clearReplyProxy() => $_clearField(47);
+  @$pb.TagNumber(47)
+  ReplyProxyView ensureReplyProxy() => $_ensure(39);
+
   @$pb.TagNumber(99)
-  $12.ModuleSession get session => $_getN(39);
+  $12.ModuleSession get session => $_getN(40);
   @$pb.TagNumber(99)
   set session($12.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(39);
+  $core.bool hasSession() => $_has(40);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $12.ModuleSession ensureSession() => $_ensure(39);
+  $12.ModuleSession ensureSession() => $_ensure(40);
 
   @$pb.TagNumber(100)
-  $12.BrainToModuleControl get control => $_getN(40);
+  $12.BrainToModuleControl get control => $_getN(41);
   @$pb.TagNumber(100)
   set control($12.BrainToModuleControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(40);
+  $core.bool hasControl() => $_has(41);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $12.BrainToModuleControl ensureControl() => $_ensure(40);
+  $12.BrainToModuleControl ensureControl() => $_ensure(41);
 }
 
 /// face -> brain:要一份屏幕放得了的视频。
@@ -2543,6 +2623,8 @@ enum FaceToBrain_Cmd {
   voiceAssets,
   voiceTurn,
   audioKeepAwake,
+  selectReplyProxy,
+  clearReplyProxy,
   control,
   notSet
 }
@@ -2567,6 +2649,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     VoiceAssets? voiceAssets,
     VoiceTurn? voiceTurn,
     AudioKeepAwakeAck? audioKeepAwake,
+    $0.Entity? selectReplyProxy,
+    $3.Empty? clearReplyProxy,
     $12.ModuleSession? session,
     $12.ModuleToBrainControl? control,
   }) {
@@ -2592,6 +2676,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     if (voiceAssets != null) result.voiceAssets = voiceAssets;
     if (voiceTurn != null) result.voiceTurn = voiceTurn;
     if (audioKeepAwake != null) result.audioKeepAwake = audioKeepAwake;
+    if (selectReplyProxy != null) result.selectReplyProxy = selectReplyProxy;
+    if (clearReplyProxy != null) result.clearReplyProxy = clearReplyProxy;
     if (session != null) result.session = session;
     if (control != null) result.control = control;
     return result;
@@ -2624,6 +2710,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
     44: FaceToBrain_Cmd.voiceAssets,
     45: FaceToBrain_Cmd.voiceTurn,
     46: FaceToBrain_Cmd.audioKeepAwake,
+    47: FaceToBrain_Cmd.selectReplyProxy,
+    48: FaceToBrain_Cmd.clearReplyProxy,
     100: FaceToBrain_Cmd.control,
     0: FaceToBrain_Cmd.notSet
   };
@@ -2631,7 +2719,28 @@ class FaceToBrain extends $pb.GeneratedMessage {
       _omitMessageNames ? '' : 'FaceToBrain',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
-    ..oo(0, [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 33, 40, 42, 43, 44, 45, 46, 100])
+    ..oo(0, [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      33,
+      40,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      100
+    ])
     ..aE<StateToggle>(1, _omitFieldNames ? '' : 'voiceState',
         enumValues: StateToggle.values)
     ..aOM<UpdateAction>(2, _omitFieldNames ? '' : 'updateAction',
@@ -2668,6 +2777,10 @@ class FaceToBrain extends $pb.GeneratedMessage {
         subBuilder: VoiceTurn.create)
     ..aOM<AudioKeepAwakeAck>(46, _omitFieldNames ? '' : 'audioKeepAwake',
         subBuilder: AudioKeepAwakeAck.create)
+    ..aOM<$0.Entity>(47, _omitFieldNames ? '' : 'selectReplyProxy',
+        subBuilder: $0.Entity.create)
+    ..aOM<$3.Empty>(48, _omitFieldNames ? '' : 'clearReplyProxy',
+        subBuilder: $3.Empty.create)
     ..aOM<$12.ModuleSession>(99, _omitFieldNames ? '' : 'session',
         subBuilder: $12.ModuleSession.create)
     ..aOM<$12.ModuleToBrainControl>(100, _omitFieldNames ? '' : 'control',
@@ -2710,6 +2823,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
   @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
   @$pb.TagNumber(100)
   FaceToBrain_Cmd whichCmd() => _FaceToBrain_CmdByTag[$_whichOneof(0)]!;
   @$pb.TagNumber(1)
@@ -2729,6 +2844,8 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(44)
   @$pb.TagNumber(45)
   @$pb.TagNumber(46)
+  @$pb.TagNumber(47)
+  @$pb.TagNumber(48)
   @$pb.TagNumber(100)
   void clearCmd() => $_clearField($_whichOneof(0));
 
@@ -2933,27 +3050,49 @@ class FaceToBrain extends $pb.GeneratedMessage {
   @$pb.TagNumber(46)
   AudioKeepAwakeAck ensureAudioKeepAwake() => $_ensure(16);
 
+  @$pb.TagNumber(47)
+  $0.Entity get selectReplyProxy => $_getN(17);
+  @$pb.TagNumber(47)
+  set selectReplyProxy($0.Entity value) => $_setField(47, value);
+  @$pb.TagNumber(47)
+  $core.bool hasSelectReplyProxy() => $_has(17);
+  @$pb.TagNumber(47)
+  void clearSelectReplyProxy() => $_clearField(47);
+  @$pb.TagNumber(47)
+  $0.Entity ensureSelectReplyProxy() => $_ensure(17);
+
+  @$pb.TagNumber(48)
+  $3.Empty get clearReplyProxy => $_getN(18);
+  @$pb.TagNumber(48)
+  set clearReplyProxy($3.Empty value) => $_setField(48, value);
+  @$pb.TagNumber(48)
+  $core.bool hasClearReplyProxy() => $_has(18);
+  @$pb.TagNumber(48)
+  void clearClearReplyProxy() => $_clearField(48);
+  @$pb.TagNumber(48)
+  $3.Empty ensureClearReplyProxy() => $_ensure(18);
+
   @$pb.TagNumber(99)
-  $12.ModuleSession get session => $_getN(17);
+  $12.ModuleSession get session => $_getN(19);
   @$pb.TagNumber(99)
   set session($12.ModuleSession value) => $_setField(99, value);
   @$pb.TagNumber(99)
-  $core.bool hasSession() => $_has(17);
+  $core.bool hasSession() => $_has(19);
   @$pb.TagNumber(99)
   void clearSession() => $_clearField(99);
   @$pb.TagNumber(99)
-  $12.ModuleSession ensureSession() => $_ensure(17);
+  $12.ModuleSession ensureSession() => $_ensure(19);
 
   @$pb.TagNumber(100)
-  $12.ModuleToBrainControl get control => $_getN(18);
+  $12.ModuleToBrainControl get control => $_getN(20);
   @$pb.TagNumber(100)
   set control($12.ModuleToBrainControl value) => $_setField(100, value);
   @$pb.TagNumber(100)
-  $core.bool hasControl() => $_has(18);
+  $core.bool hasControl() => $_has(20);
   @$pb.TagNumber(100)
   void clearControl() => $_clearField(100);
   @$pb.TagNumber(100)
-  $12.ModuleToBrainControl ensureControl() => $_ensure(18);
+  $12.ModuleToBrainControl ensureControl() => $_ensure(20);
 }
 
 /// ── 跟单:开单卡 ──────────────────────────────────────────────

@@ -1022,6 +1022,9 @@ impl serde::Serialize for BrainToFace {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                brain_to_face::Cmd::ReplyProxy(v) => {
+                    struct_ser.serialize_field("replyProxy", v)?;
+                }
                 brain_to_face::Cmd::AudioKeepAwake(v) => {
                     struct_ser.serialize_field("audioKeepAwake", v)?;
                 }
@@ -1159,6 +1162,8 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "reply_proxy",
+            "replyProxy",
             "audio_keep_awake",
             "audioKeepAwake",
             "voice_turn",
@@ -1243,6 +1248,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            ReplyProxy,
             AudioKeepAwake,
             VoiceTurn,
             VoiceCue,
@@ -1305,6 +1311,7 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "replyProxy" | "reply_proxy" => Ok(GeneratedField::ReplyProxy),
                             "audioKeepAwake" | "audio_keep_awake" => Ok(GeneratedField::AudioKeepAwake),
                             "voiceTurn" | "voice_turn" => Ok(GeneratedField::VoiceTurn),
                             "voiceCue" | "voice_cue" => Ok(GeneratedField::VoiceCue),
@@ -1373,6 +1380,13 @@ impl<'de> serde::Deserialize<'de> for BrainToFace {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::ReplyProxy => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("replyProxy"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(brain_to_face::Cmd::ReplyProxy)
+;
                         }
                         GeneratedField::AudioKeepAwake => {
                             if cmd__.is_some() {
@@ -2872,6 +2886,12 @@ impl serde::Serialize for FaceToBrain {
         }
         if let Some(v) = self.cmd.as_ref() {
             match v {
+                face_to_brain::Cmd::SelectReplyProxy(v) => {
+                    struct_ser.serialize_field("selectReplyProxy", v)?;
+                }
+                face_to_brain::Cmd::ClearReplyProxy(v) => {
+                    struct_ser.serialize_field("clearReplyProxy", v)?;
+                }
                 face_to_brain::Cmd::AudioKeepAwake(v) => {
                     struct_ser.serialize_field("audioKeepAwake", v)?;
                 }
@@ -2941,6 +2961,10 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
     {
         const FIELDS: &[&str] = &[
             "session",
+            "select_reply_proxy",
+            "selectReplyProxy",
+            "clear_reply_proxy",
+            "clearReplyProxy",
             "audio_keep_awake",
             "audioKeepAwake",
             "voice_assets",
@@ -2981,6 +3005,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
         #[allow(clippy::enum_variant_names)]
         enum GeneratedField {
             Session,
+            SelectReplyProxy,
+            ClearReplyProxy,
             AudioKeepAwake,
             VoiceAssets,
             VoiceTurn,
@@ -3021,6 +3047,8 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                     {
                         match value {
                             "session" => Ok(GeneratedField::Session),
+                            "selectReplyProxy" | "select_reply_proxy" => Ok(GeneratedField::SelectReplyProxy),
+                            "clearReplyProxy" | "clear_reply_proxy" => Ok(GeneratedField::ClearReplyProxy),
                             "audioKeepAwake" | "audio_keep_awake" => Ok(GeneratedField::AudioKeepAwake),
                             "voiceAssets" | "voice_assets" => Ok(GeneratedField::VoiceAssets),
                             "voiceTurn" | "voice_turn" => Ok(GeneratedField::VoiceTurn),
@@ -3067,6 +3095,20 @@ impl<'de> serde::Deserialize<'de> for FaceToBrain {
                                 return Err(serde::de::Error::duplicate_field("session"));
                             }
                             session__ = map_.next_value()?;
+                        }
+                        GeneratedField::SelectReplyProxy => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("selectReplyProxy"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::SelectReplyProxy)
+;
+                        }
+                        GeneratedField::ClearReplyProxy => {
+                            if cmd__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("clearReplyProxy"));
+                            }
+                            cmd__ = map_.next_value::<::std::option::Option<_>>()?.map(face_to_brain::Cmd::ClearReplyProxy)
+;
                         }
                         GeneratedField::AudioKeepAwake => {
                             if cmd__.is_some() {
@@ -9926,6 +9968,97 @@ impl<'de> serde::Deserialize<'de> for ReceiptNotifications {
             }
         }
         deserializer.deserialize_struct("hi.ninja.ReceiptNotifications", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for ReplyProxyView {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.agent.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ReplyProxyView", len)?;
+        if let Some(v) = self.agent.as_ref() {
+            struct_ser.serialize_field("agent", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ReplyProxyView {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "agent",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Agent,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "agent" => Ok(GeneratedField::Agent),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ReplyProxyView;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ReplyProxyView")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ReplyProxyView, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut agent__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Agent => {
+                            if agent__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("agent"));
+                            }
+                            agent__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ReplyProxyView {
+                    agent: agent__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ReplyProxyView", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for RobotInit {

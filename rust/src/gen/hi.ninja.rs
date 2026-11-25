@@ -1591,6 +1591,14 @@ pub struct RobotInit {
     #[prost(message, optional, tag = "2")]
     pub master: ::core::option::Option<super::Entity>,
 }
+/// face 的代理模式显示快照；brain 是当前运行期设置的唯一所有者。
+/// agent 不传 = 未启用。联系人复用完整 Entity，不按人/机器人区分。
+/// 仅用于本地屏幕交互；IM 代理收发仍使用 hi.club.Message 的既有关联规范。
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct ReplyProxyView {
+    #[prost(message, optional, tag = "1")]
+    pub agent: ::core::option::Option<super::Entity>,
+}
 /// 好友列表（全量，初始化时推送）
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct FriendList {
@@ -1817,7 +1825,7 @@ pub struct BrainToFace {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "brain_to_face::Cmd",
-        tags = "46, 44, 45, 33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
+        tags = "47, 46, 44, 45, 33, 34, 43, 42, 32, 31, 100, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 20, 12, 13, 15, 14, 16, 17, 18, 19, 21, 22, 24, 25, 26, 29, 30, 40, 41, 27"
     )]
     pub cmd: ::core::option::Option<brain_to_face::Cmd>,
 }
@@ -1825,6 +1833,9 @@ pub struct BrainToFace {
 pub mod brain_to_face {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        /// 初始化及选择变化时推全量快照
+        #[prost(message, tag = "47")]
+        ReplyProxy(super::ReplyProxyView),
         #[prost(message, tag = "46")]
         AudioKeepAwake(super::AudioKeepAwakeSet),
         #[prost(message, tag = "44")]
@@ -2024,7 +2035,7 @@ pub struct FaceToBrain {
     pub session: ::core::option::Option<ModuleSession>,
     #[prost(
         oneof = "face_to_brain::Cmd",
-        tags = "46, 44, 45, 43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
+        tags = "47, 48, 46, 44, 45, 43, 33, 40, 9, 42, 10, 100, 1, 2, 3, 4, 5, 6, 7, 8"
     )]
     pub cmd: ::core::option::Option<face_to_brain::Cmd>,
 }
@@ -2032,6 +2043,12 @@ pub struct FaceToBrain {
 pub mod face_to_brain {
     #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Cmd {
+        /// 选择现有联系人；brain 按当前关系解析权威 Entity
+        #[prost(message, tag = "47")]
+        SelectReplyProxy(super::super::Entity),
+        /// 关闭代理，后续问题恢复 AI
+        #[prost(message, tag = "48")]
+        ClearReplyProxy(::pbjson_types::Empty),
         #[prost(message, tag = "46")]
         AudioKeepAwake(super::AudioKeepAwakeAck),
         #[prost(message, tag = "44")]
