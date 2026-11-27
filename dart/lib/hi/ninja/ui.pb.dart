@@ -446,17 +446,17 @@ class DisplayMedia extends $pb.GeneratedMessage {
   void clearHeight() => $_clearField(5);
 }
 
-enum DisplayAudio_Source { url, stream, notSet }
+enum DisplayAudio_Source { file, stream, notSet }
 
 class DisplayAudio extends $pb.GeneratedMessage {
   factory DisplayAudio({
-    $core.String? url,
+    $core.List<$core.int>? file,
     $2.AudioStreamEvent? stream,
     $core.int? duration,
     $core.bool? autoplay,
   }) {
     final result = create();
-    if (url != null) result.url = url;
+    if (file != null) result.file = file;
     if (stream != null) result.stream = stream;
     if (duration != null) result.duration = duration;
     if (autoplay != null) result.autoplay = autoplay;
@@ -474,7 +474,7 @@ class DisplayAudio extends $pb.GeneratedMessage {
 
   static const $core.Map<$core.int, DisplayAudio_Source>
       _DisplayAudio_SourceByTag = {
-    1: DisplayAudio_Source.url,
+    1: DisplayAudio_Source.file,
     2: DisplayAudio_Source.stream,
     0: DisplayAudio_Source.notSet
   };
@@ -483,7 +483,8 @@ class DisplayAudio extends $pb.GeneratedMessage {
       package: const $pb.PackageName(_omitMessageNames ? '' : 'hi.ninja'),
       createEmptyInstance: create)
     ..oo(0, [1, 2])
-    ..aOS(1, _omitFieldNames ? '' : 'url')
+    ..a<$core.List<$core.int>>(
+        1, _omitFieldNames ? '' : 'file', $pb.PbFieldType.OY)
     ..aOM<$2.AudioStreamEvent>(2, _omitFieldNames ? '' : 'stream',
         subBuilder: $2.AudioStreamEvent.create)
     ..aI(3, _omitFieldNames ? '' : 'duration', fieldType: $pb.PbFieldType.OU3)
@@ -517,14 +518,16 @@ class DisplayAudio extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   void clearSource() => $_clearField($_whichOneof(0));
 
+  /// Brain downloads/adapts the original through Club. The file accompanies
+  /// the display; face needs neither chat history nor a second media delivery.
   @$pb.TagNumber(1)
-  $core.String get url => $_getSZ(0);
+  $core.List<$core.int> get file => $_getN(0);
   @$pb.TagNumber(1)
-  set url($core.String value) => $_setString(0, value);
+  set file($core.List<$core.int> value) => $_setBytes(0, value);
   @$pb.TagNumber(1)
-  $core.bool hasUrl() => $_has(0);
+  $core.bool hasFile() => $_has(0);
   @$pb.TagNumber(1)
-  void clearUrl() => $_clearField(1);
+  void clearFile() => $_clearField(1);
 
   /// Initial TTS Start travels WITH its displayed answer. Later PCM/end use
   /// AudioStreamPlay with this same stream_id, retaining the bounded window.

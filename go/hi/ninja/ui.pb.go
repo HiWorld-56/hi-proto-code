@@ -685,7 +685,7 @@ type DisplayAudio struct {
 	state protoimpl.MessageState `protogen:"open.v1"`
 	// Types that are valid to be assigned to Source:
 	//
-	//	*DisplayAudio_Url
+	//	*DisplayAudio_File
 	//	*DisplayAudio_Stream
 	Source        isDisplayAudio_Source `protobuf_oneof:"source"`
 	Duration      *uint32               `protobuf:"varint,3,opt,name=duration,proto3,oneof" json:"duration,omitempty"`
@@ -731,13 +731,13 @@ func (x *DisplayAudio) GetSource() isDisplayAudio_Source {
 	return nil
 }
 
-func (x *DisplayAudio) GetUrl() string {
+func (x *DisplayAudio) GetFile() []byte {
 	if x != nil {
-		if x, ok := x.Source.(*DisplayAudio_Url); ok {
-			return x.Url
+		if x, ok := x.Source.(*DisplayAudio_File); ok {
+			return x.File
 		}
 	}
-	return ""
+	return nil
 }
 
 func (x *DisplayAudio) GetStream() *hi.AudioStreamEvent {
@@ -767,8 +767,10 @@ type isDisplayAudio_Source interface {
 	isDisplayAudio_Source()
 }
 
-type DisplayAudio_Url struct {
-	Url string `protobuf:"bytes,1,opt,name=url,proto3,oneof"`
+type DisplayAudio_File struct {
+	// Brain downloads/adapts the original through Club. The file accompanies
+	// the display; face needs neither chat history nor a second media delivery.
+	File []byte `protobuf:"bytes,1,opt,name=file,proto3,oneof"`
 }
 
 type DisplayAudio_Stream struct {
@@ -777,7 +779,7 @@ type DisplayAudio_Stream struct {
 	Stream *hi.AudioStreamEvent `protobuf:"bytes,2,opt,name=stream,proto3,oneof"`
 }
 
-func (*DisplayAudio_Url) isDisplayAudio_Source() {}
+func (*DisplayAudio_File) isDisplayAudio_Source() {}
 
 func (*DisplayAudio_Stream) isDisplayAudio_Source() {}
 
@@ -4025,9 +4027,9 @@ const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\x06_coverB\v\n" +
 	"\t_durationB\b\n" +
 	"\x06_widthB\t\n" +
-	"\a_height\"\xa2\x02\n" +
-	"\fDisplayAudio\x12\x1b\n" +
-	"\x03url\x18\x01 \x01(\tB\a\xbaH\x04r\x02\x10\x01H\x00R\x03url\x12\x87\x01\n" +
+	"\a_height\"\xa9\x02\n" +
+	"\fDisplayAudio\x12\"\n" +
+	"\x04file\x18\x01 \x01(\fB\f\xbaH\tz\a\x10\x01\x18\x80\x80\x80\x10H\x00R\x04file\x12\x87\x01\n" +
 	"\x06stream\x18\x02 \x01(\v2\x14.hi.AudioStreamEventBW\xbaHT\xba\x01Q\n" +
 	"\x13display_audio.start\x12)display audio must contain a stream start\x1a\x0fhas(this.start)H\x00R\x06stream\x12\x1f\n" +
 	"\bduration\x18\x03 \x01(\rH\x01R\bduration\x88\x01\x01\x12\x1f\n" +
@@ -4572,7 +4574,7 @@ func file_hi_ninja_ui_proto_init() {
 	file_hi_ninja_ui_proto_msgTypes[4].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[5].OneofWrappers = []any{}
 	file_hi_ninja_ui_proto_msgTypes[6].OneofWrappers = []any{
-		(*DisplayAudio_Url)(nil),
+		(*DisplayAudio_File)(nil),
 		(*DisplayAudio_Stream)(nil),
 	}
 	file_hi_ninja_ui_proto_msgTypes[7].OneofWrappers = []any{

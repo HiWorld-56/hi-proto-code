@@ -1654,8 +1654,10 @@ pub struct DisplayAudio {
 pub mod display_audio {
     #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
     pub enum Source {
-        #[prost(string, tag = "1")]
-        Url(::prost::alloc::string::String),
+        /// Brain downloads/adapts the original through Club. The file accompanies
+        /// the display; face needs neither chat history nor a second media delivery.
+        #[prost(bytes, tag = "1")]
+        File(::prost::alloc::vec::Vec<u8>),
         /// Initial TTS Start travels WITH its displayed answer. Later PCM/end use
         /// AudioStreamPlay with this same stream_id, retaining the bounded window.
         #[prost(message, tag = "2")]

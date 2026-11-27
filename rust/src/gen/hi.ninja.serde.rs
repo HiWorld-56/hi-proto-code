@@ -2974,8 +2974,10 @@ impl serde::Serialize for DisplayAudio {
         }
         if let Some(v) = self.source.as_ref() {
             match v {
-                display_audio::Source::Url(v) => {
-                    struct_ser.serialize_field("url", v)?;
+                display_audio::Source::File(v) => {
+                    #[allow(clippy::needless_borrow)]
+                    #[allow(clippy::needless_borrows_for_generic_args)]
+                    struct_ser.serialize_field("file", pbjson::private::base64::encode(&v).as_str())?;
                 }
                 display_audio::Source::Stream(v) => {
                     struct_ser.serialize_field("stream", v)?;
@@ -2994,7 +2996,7 @@ impl<'de> serde::Deserialize<'de> for DisplayAudio {
         const FIELDS: &[&str] = &[
             "duration",
             "autoplay",
-            "url",
+            "file",
             "stream",
         ];
 
@@ -3002,7 +3004,7 @@ impl<'de> serde::Deserialize<'de> for DisplayAudio {
         enum GeneratedField {
             Duration,
             Autoplay,
-            Url,
+            File,
             Stream,
         }
         impl<'de> serde::Deserialize<'de> for GeneratedField {
@@ -3027,7 +3029,7 @@ impl<'de> serde::Deserialize<'de> for DisplayAudio {
                         match value {
                             "duration" => Ok(GeneratedField::Duration),
                             "autoplay" => Ok(GeneratedField::Autoplay),
-                            "url" => Ok(GeneratedField::Url),
+                            "file" => Ok(GeneratedField::File),
                             "stream" => Ok(GeneratedField::Stream),
                             _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
                         }
@@ -3067,11 +3069,11 @@ impl<'de> serde::Deserialize<'de> for DisplayAudio {
                             }
                             autoplay__ = map_.next_value()?;
                         }
-                        GeneratedField::Url => {
+                        GeneratedField::File => {
                             if source__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("url"));
+                                return Err(serde::de::Error::duplicate_field("file"));
                             }
-                            source__ = map_.next_value::<::std::option::Option<_>>()?.map(display_audio::Source::Url);
+                            source__ = map_.next_value::<::std::option::Option<::pbjson::private::BytesDeserialize<_>>>()?.map(|x| display_audio::Source::File(x.0));
                         }
                         GeneratedField::Stream => {
                             if source__.is_some() {

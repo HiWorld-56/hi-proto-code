@@ -184,7 +184,7 @@ final $typed_data.Uint8List displayMediaDescriptor = $convert.base64Decode(
 const DisplayAudio$json = {
   '1': 'DisplayAudio',
   '2': [
-    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '9': 0, '10': 'url'},
+    {'1': 'file', '3': 1, '4': 1, '5': 12, '8': {}, '9': 0, '10': 'file'},
     {
       '1': 'stream',
       '3': 2,
@@ -223,12 +223,12 @@ const DisplayAudio$json = {
 
 /// Descriptor for `DisplayAudio`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List displayAudioDescriptor = $convert.base64Decode(
-    'CgxEaXNwbGF5QXVkaW8SGwoDdXJsGAEgASgJQge6SARyAhABSABSA3VybBKHAQoGc3RyZWFtGA'
-    'IgASgLMhQuaGkuQXVkaW9TdHJlYW1FdmVudEJXukhUugFRChNkaXNwbGF5X2F1ZGlvLnN0YXJ0'
-    'EilkaXNwbGF5IGF1ZGlvIG11c3QgY29udGFpbiBhIHN0cmVhbSBzdGFydBoPaGFzKHRoaXMuc3'
-    'RhcnQpSABSBnN0cmVhbRIfCghkdXJhdGlvbhgDIAEoDUgBUghkdXJhdGlvbogBARIfCghhdXRv'
-    'cGxheRgEIAEoCEgCUghhdXRvcGxheYgBAUIPCgZzb3VyY2USBbpIAggBQgsKCV9kdXJhdGlvbk'
-    'ILCglfYXV0b3BsYXk=');
+    'CgxEaXNwbGF5QXVkaW8SIgoEZmlsZRgBIAEoDEIMukgJegcQARiAgIAQSABSBGZpbGUShwEKBn'
+    'N0cmVhbRgCIAEoCzIULmhpLkF1ZGlvU3RyZWFtRXZlbnRCV7pIVLoBUQoTZGlzcGxheV9hdWRp'
+    'by5zdGFydBIpZGlzcGxheSBhdWRpbyBtdXN0IGNvbnRhaW4gYSBzdHJlYW0gc3RhcnQaD2hhcy'
+    'h0aGlzLnN0YXJ0KUgAUgZzdHJlYW0SHwoIZHVyYXRpb24YAyABKA1IAVIIZHVyYXRpb26IAQES'
+    'HwoIYXV0b3BsYXkYBCABKAhIAlIIYXV0b3BsYXmIAQFCDwoGc291cmNlEgW6SAIIAUILCglfZH'
+    'VyYXRpb25CCwoJX2F1dG9wbGF5');
 
 @$core.Deprecated('Use displayPartDescriptor instead')
 const DisplayPart$json = {
