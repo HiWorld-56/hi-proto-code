@@ -129,23 +129,242 @@ final $typed_data.Uint8List masterEventDescriptor = $convert.base64Decode(
     'CgtNYXN0ZXJFdmVudBIiCgZtYXN0ZXIYASABKAsyCi5oaS5FbnRpdHlSBm1hc3RlchIdCgd0cm'
     'lnZ2VyGAIgASgJSABSB3RyaWdnZXKIAQFCCgoIX3RyaWdnZXI=');
 
-@$core.Deprecated('Use textReplyDescriptor instead')
-const TextReply$json = {
-  '1': 'TextReply',
+@$core.Deprecated('Use displayMediaDescriptor instead')
+const DisplayMedia$json = {
+  '1': 'DisplayMedia',
   '2': [
-    {'1': 'uuid', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'uuid', '17': true},
-    {'1': 'value', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'value', '17': true},
+    {
+      '1': 'url',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'url',
+      '17': true
+    },
+    {'1': 'cover', '3': 2, '4': 1, '5': 9, '9': 1, '10': 'cover', '17': true},
+    {
+      '1': 'duration',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 2,
+      '10': 'duration',
+      '17': true
+    },
+    {'1': 'width', '3': 4, '4': 1, '5': 13, '9': 3, '10': 'width', '17': true},
+    {
+      '1': 'height',
+      '3': 5,
+      '4': 1,
+      '5': 13,
+      '9': 4,
+      '10': 'height',
+      '17': true
+    },
   ],
   '8': [
-    {'1': '_uuid'},
-    {'1': '_value'},
+    {'1': '_url'},
+    {'1': '_cover'},
+    {'1': '_duration'},
+    {'1': '_width'},
+    {'1': '_height'},
   ],
 };
 
-/// Descriptor for `TextReply`. Decode as a `google.protobuf.DescriptorProto`.
-final $typed_data.Uint8List textReplyDescriptor = $convert.base64Decode(
-    'CglUZXh0UmVwbHkSFwoEdXVpZBgBIAEoCUgAUgR1dWlkiAEBEhkKBXZhbHVlGAIgASgJSAFSBX'
-    'ZhbHVliAEBQgcKBV91dWlkQggKBl92YWx1ZQ==');
+/// Descriptor for `DisplayMedia`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List displayMediaDescriptor = $convert.base64Decode(
+    'CgxEaXNwbGF5TWVkaWESIQoDdXJsGAEgASgJQgq6SAfIAQFyAhABSABSA3VybIgBARIZCgVjb3'
+    'ZlchgCIAEoCUgBUgVjb3ZlcogBARIfCghkdXJhdGlvbhgDIAEoDUgCUghkdXJhdGlvbogBARIZ'
+    'CgV3aWR0aBgEIAEoDUgDUgV3aWR0aIgBARIbCgZoZWlnaHQYBSABKA1IBFIGaGVpZ2h0iAEBQg'
+    'YKBF91cmxCCAoGX2NvdmVyQgsKCV9kdXJhdGlvbkIICgZfd2lkdGhCCQoHX2hlaWdodA==');
+
+@$core.Deprecated('Use displayAudioDescriptor instead')
+const DisplayAudio$json = {
+  '1': 'DisplayAudio',
+  '2': [
+    {'1': 'url', '3': 1, '4': 1, '5': 9, '8': {}, '9': 0, '10': 'url'},
+    {
+      '1': 'stream',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.AudioStreamEvent',
+      '8': {},
+      '9': 0,
+      '10': 'stream'
+    },
+    {
+      '1': 'duration',
+      '3': 3,
+      '4': 1,
+      '5': 13,
+      '9': 1,
+      '10': 'duration',
+      '17': true
+    },
+    {
+      '1': 'autoplay',
+      '3': 4,
+      '4': 1,
+      '5': 8,
+      '9': 2,
+      '10': 'autoplay',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': 'source', '2': {}},
+    {'1': '_duration'},
+    {'1': '_autoplay'},
+  ],
+};
+
+/// Descriptor for `DisplayAudio`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List displayAudioDescriptor = $convert.base64Decode(
+    'CgxEaXNwbGF5QXVkaW8SGwoDdXJsGAEgASgJQge6SARyAhABSABSA3VybBKHAQoGc3RyZWFtGA'
+    'IgASgLMhQuaGkuQXVkaW9TdHJlYW1FdmVudEJXukhUugFRChNkaXNwbGF5X2F1ZGlvLnN0YXJ0'
+    'EilkaXNwbGF5IGF1ZGlvIG11c3QgY29udGFpbiBhIHN0cmVhbSBzdGFydBoPaGFzKHRoaXMuc3'
+    'RhcnQpSABSBnN0cmVhbRIfCghkdXJhdGlvbhgDIAEoDUgBUghkdXJhdGlvbogBARIfCghhdXRv'
+    'cGxheRgEIAEoCEgCUghhdXRvcGxheYgBAUIPCgZzb3VyY2USBbpIAggBQgsKCV9kdXJhdGlvbk'
+    'ILCglfYXV0b3BsYXk=');
+
+@$core.Deprecated('Use displayPartDescriptor instead')
+const DisplayPart$json = {
+  '1': 'DisplayPart',
+  '2': [
+    {'1': 'markdown', '3': 1, '4': 1, '5': 9, '9': 0, '10': 'markdown'},
+    {
+      '1': 'image',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayMedia',
+      '9': 0,
+      '10': 'image'
+    },
+    {
+      '1': 'video',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayMedia',
+      '9': 0,
+      '10': 'video'
+    },
+    {
+      '1': 'audio',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayAudio',
+      '9': 0,
+      '10': 'audio'
+    },
+    {'1': 'placeholder', '3': 5, '4': 1, '5': 9, '9': 0, '10': 'placeholder'},
+  ],
+  '8': [
+    {'1': 'kind', '2': {}},
+  ],
+};
+
+/// Descriptor for `DisplayPart`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List displayPartDescriptor = $convert.base64Decode(
+    'CgtEaXNwbGF5UGFydBIcCghtYXJrZG93bhgBIAEoCUgAUghtYXJrZG93bhIuCgVpbWFnZRgCIA'
+    'EoCzIWLmhpLm5pbmphLkRpc3BsYXlNZWRpYUgAUgVpbWFnZRIuCgV2aWRlbxgDIAEoCzIWLmhp'
+    'Lm5pbmphLkRpc3BsYXlNZWRpYUgAUgV2aWRlbxIuCgVhdWRpbxgEIAEoCzIWLmhpLm5pbmphLk'
+    'Rpc3BsYXlBdWRpb0gAUgVhdWRpbxIiCgtwbGFjZWhvbGRlchgFIAEoCUgAUgtwbGFjZWhvbGRl'
+    'ckINCgRraW5kEgW6SAIIAQ==');
+
+@$core.Deprecated('Use displayBodyDescriptor instead')
+const DisplayBody$json = {
+  '1': 'DisplayBody',
+  '2': [
+    {
+      '1': 'parts',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.hi.ninja.DisplayPart',
+      '10': 'parts'
+    },
+  ],
+};
+
+/// Descriptor for `DisplayBody`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List displayBodyDescriptor = $convert.base64Decode(
+    'CgtEaXNwbGF5Qm9keRIrCgVwYXJ0cxgBIAMoCzIVLmhpLm5pbmphLkRpc3BsYXlQYXJ0UgVwYX'
+    'J0cw==');
+
+@$core.Deprecated('Use displayQuoteDescriptor instead')
+const DisplayQuote$json = {
+  '1': 'DisplayQuote',
+  '2': [
+    {'1': 'author', '3': 1, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'author'},
+    {
+      '1': 'body',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayBody',
+      '8': {},
+      '10': 'body'
+    },
+  ],
+};
+
+/// Descriptor for `DisplayQuote`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List displayQuoteDescriptor = $convert.base64Decode(
+    'CgxEaXNwbGF5UXVvdGUSIgoGYXV0aG9yGAEgASgLMgouaGkuRW50aXR5UgZhdXRob3ISMQoEYm'
+    '9keRgCIAEoCzIVLmhpLm5pbmphLkRpc3BsYXlCb2R5Qga6SAPIAQFSBGJvZHk=');
+
+@$core.Deprecated('Use chatDisplayDescriptor instead')
+const ChatDisplay$json = {
+  '1': 'ChatDisplay',
+  '2': [
+    {
+      '1': 'uuid',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '8': {},
+      '9': 0,
+      '10': 'uuid',
+      '17': true
+    },
+    {'1': 'author', '3': 2, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'author'},
+    {'1': 'group', '3': 3, '4': 1, '5': 11, '6': '.hi.Entity', '10': 'group'},
+    {
+      '1': 'body',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayBody',
+      '8': {},
+      '10': 'body'
+    },
+    {
+      '1': 'quote',
+      '3': 5,
+      '4': 1,
+      '5': 11,
+      '6': '.hi.ninja.DisplayQuote',
+      '10': 'quote'
+    },
+  ],
+  '8': [
+    {'1': '_uuid'},
+  ],
+};
+
+/// Descriptor for `ChatDisplay`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List chatDisplayDescriptor = $convert.base64Decode(
+    'CgtDaGF0RGlzcGxheRImCgR1dWlkGAEgASgJQg26SArIAQFyBRABGIABSABSBHV1aWSIAQESIg'
+    'oGYXV0aG9yGAIgASgLMgouaGkuRW50aXR5UgZhdXRob3ISIAoFZ3JvdXAYAyABKAsyCi5oaS5F'
+    'bnRpdHlSBWdyb3VwEjEKBGJvZHkYBCABKAsyFS5oaS5uaW5qYS5EaXNwbGF5Qm9keUIGukgDyA'
+    'EBUgRib2R5EiwKBXF1b3RlGAUgASgLMhYuaGkubmluamEuRGlzcGxheVF1b3RlUgVxdW90ZUIH'
+    'CgVfdXVpZA==');
 
 @$core.Deprecated('Use audioPlayDescriptor instead')
 const AudioPlay$json = {
@@ -688,7 +907,7 @@ const BrainToFace$json = {
       '3': 4,
       '4': 1,
       '5': 11,
-      '6': '.hi.club.Message',
+      '6': '.hi.ninja.ChatDisplay',
       '9': 0,
       '10': 'showImRequest'
     },
@@ -697,7 +916,7 @@ const BrainToFace$json = {
       '3': 5,
       '4': 1,
       '5': 11,
-      '6': '.hi.ninja.TextReply',
+      '6': '.hi.ninja.ChatDisplay',
       '9': 0,
       '10': 'showImReply'
     },
@@ -706,7 +925,7 @@ const BrainToFace$json = {
       '3': 6,
       '4': 1,
       '5': 11,
-      '6': '.hi.ninja.TextReply',
+      '6': '.hi.ninja.ChatDisplay',
       '9': 0,
       '10': 'showVoiceReply'
     },
@@ -951,38 +1170,39 @@ final $typed_data.Uint8List brainToFaceDescriptor = $convert.base64Decode(
     'amEuQnJhaW5Ub01vZHVsZUNvbnRyb2xIAFIHY29udHJvbBI0Cgppbml0X3JvYm90GAEgASgLMh'
     'MuaGkubmluamEuUm9ib3RJbml0SABSCWluaXRSb2JvdBI4CgtzaG93X2xpc3RlbhgCIAEoDjIV'
     'LmhpLm5pbmphLlN0YXRlVG9nZ2xlSABSCnNob3dMaXN0ZW4SNgoMc2hvd19lbW90aW9uGAMgAS'
-    'gOMhEuaGkubmluamEuRW1vdGlvbkgAUgtzaG93RW1vdGlvbhI6Cg9zaG93X2ltX3JlcXVlc3QY'
-    'BCABKAsyEC5oaS5jbHViLk1lc3NhZ2VIAFINc2hvd0ltUmVxdWVzdBI5Cg1zaG93X2ltX3JlcG'
-    'x5GAUgASgLMhMuaGkubmluamEuVGV4dFJlcGx5SABSC3Nob3dJbVJlcGx5Ej8KEHNob3dfdm9p'
-    'Y2VfcmVwbHkYBiABKAsyEy5oaS5uaW5qYS5UZXh0UmVwbHlIAFIOc2hvd1ZvaWNlUmVwbHkSOg'
-    'oMc2hvd19xcl9jb2RlGAcgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABSCnNob3dRckNv'
-    'ZGUSLQoLZXZlbnRfcm9ib3QYCCABKAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2JvdBI6Cgxldm'
-    'VudF9tYXN0ZXIYCSABKAsyFS5oaS5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVudE1hc3RlchI5'
-    'Cg1ldmVudF9tZW1iZXJzGAogASgLMhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZXZlbnRNZW1iZX'
-    'JzEjYKDGV2ZW50X3BsdWdpbhgLIAEoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFILZXZlbnRQbHVn'
-    'aW4STgoVZXZlbnRfcGx1Z2luX3Byb2dyZXNzGBQgASgLMhguaGkubmluamEuUGx1Z2luUHJvZ3'
-    'Jlc3NIAFITZXZlbnRQbHVnaW5Qcm9ncmVzcxJCChFldmVudF90cmFuc2FjdGlvbhgMIAEoCzIT'
-    'LmhpLmRpZC5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYXlfYXVkaW8YDS'
-    'ABKAsyEy5oaS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50X2ZyaWVuZHMY'
-    'DyABKAsyFC5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8ChNldmVudF9mcm'
-    'llbmRfZGVsZXRlGA4gASgLMgouaGkuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVsZXRlEjYKEGV2'
-    'ZW50X2ZyaWVuZF9hZGQYECABKAsyCi5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbmRBZGQSPAoMbW'
-    'VtYmVyc19pbml0GBEgASgLMhcuaGkubmluamEuR3JvdXBJbmZvTGlzdEgAUgttZW1iZXJzSW5p'
-    'dBI6CgxldmVudF9zdGF0dXMYEiABKAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudEgAUgtldmVudF'
-    'N0YXR1cxI7CgxldmVudF91cGRhdGUYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVTdGF0dXNIAFIL'
-    'ZXZlbnRVcGRhdGUSUQoWZXZlbnRfYmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLmhpLm5pbmphLk'
-    'JpbmFuY2VTZXR0aW5nc0gAUhRldmVudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5hbmNlX3Jlc3Vs'
-    'dBgWIAEoCzIZLmhpLmJpbmFuY2UuQmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUmVzdWx0EioKCH'
-    'Nob3dfdGlwGBggASgLMg0uaGkubmluamEuVGlwSABSB3Nob3dUaXASKwoHc2hvd19xchgZIAEo'
-    'CzIQLmhpLm5pbmphLlFyQ2FyZEgAUgZzaG93UXISQAoOYmluYW5jZV9vZmZlcnMYGiABKAsyFy'
-    '5oaS5uaW5qYS5CaW5hbmNlT2ZmZXJzSABSDWJpbmFuY2VPZmZlcnMSVQoWZXZlbnRfcHJvZHVj'
-    'dF91cGxvYWRlZBgdIAEoCzIdLmhpLmNsdWIuUHJvZHVjdEludmVudG9yeUl0ZW1IAFIUZXZlbn'
-    'RQcm9kdWN0VXBsb2FkZWQSUAoUZXZlbnRfcHJvZHVjdF9saXN0ZWQYHiABKAsyHC5oaS5jbHVi'
-    'LlByb2R1Y3RBbm5vdW5jZW1lbnRIAFISZXZlbnRQcm9kdWN0TGlzdGVkEk8KE2V2ZW50X3Byb2'
-    'R1Y3Rfb3JkZXIYKCABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZU9yZGVySABSEWV2ZW50'
-    'UHJvZHVjdE9yZGVyElMKFXByb2R1Y3RfYWN0aW9uX3Jlc3VsdBgpIAEoCzIdLmhpLm5pbmphLl'
-    'Byb2R1Y3RBY3Rpb25SZXN1bHRIAFITcHJvZHVjdEFjdGlvblJlc3VsdBI3Cgt2aWRlb19yZWFk'
-    'eRgbIAEoCzIULmhpLm5pbmphLlZpZGVvUmVhZHlIAFIKdmlkZW9SZWFkeUIFCgNjbWQ=');
+    'gOMhEuaGkubmluamEuRW1vdGlvbkgAUgtzaG93RW1vdGlvbhI/Cg9zaG93X2ltX3JlcXVlc3QY'
+    'BCABKAsyFS5oaS5uaW5qYS5DaGF0RGlzcGxheUgAUg1zaG93SW1SZXF1ZXN0EjsKDXNob3dfaW'
+    '1fcmVwbHkYBSABKAsyFS5oaS5uaW5qYS5DaGF0RGlzcGxheUgAUgtzaG93SW1SZXBseRJBChBz'
+    'aG93X3ZvaWNlX3JlcGx5GAYgASgLMhUuaGkubmluamEuQ2hhdERpc3BsYXlIAFIOc2hvd1ZvaW'
+    'NlUmVwbHkSOgoMc2hvd19xcl9jb2RlGAcgASgLMhYuZ29vZ2xlLnByb3RvYnVmLkVtcHR5SABS'
+    'CnNob3dRckNvZGUSLQoLZXZlbnRfcm9ib3QYCCABKAsyCi5oaS5FbnRpdHlIAFIKZXZlbnRSb2'
+    'JvdBI6CgxldmVudF9tYXN0ZXIYCSABKAsyFS5oaS5uaW5qYS5NYXN0ZXJFdmVudEgAUgtldmVu'
+    'dE1hc3RlchI5Cg1ldmVudF9tZW1iZXJzGAogASgLMhIuaGkuY2x1Yi5Hcm91cEluZm9IAFIMZX'
+    'ZlbnRNZW1iZXJzEjYKDGV2ZW50X3BsdWdpbhgLIAEoCzIRLmhpLmFpLlBsdWdpblZpZXdIAFIL'
+    'ZXZlbnRQbHVnaW4STgoVZXZlbnRfcGx1Z2luX3Byb2dyZXNzGBQgASgLMhguaGkubmluamEuUG'
+    'x1Z2luUHJvZ3Jlc3NIAFITZXZlbnRQbHVnaW5Qcm9ncmVzcxJCChFldmVudF90cmFuc2FjdGlv'
+    'bhgMIAEoCzITLmhpLmRpZC5UcmFuc2FjdGlvbkgAUhBldmVudFRyYW5zYWN0aW9uEjQKCnBsYX'
+    'lfYXVkaW8YDSABKAsyEy5oaS5uaW5qYS5BdWRpb1BsYXlIAFIJcGxheUF1ZGlvEjsKDWV2ZW50'
+    'X2ZyaWVuZHMYDyABKAsyFC5oaS5uaW5qYS5GcmllbmRMaXN0SABSDGV2ZW50RnJpZW5kcxI8Ch'
+    'NldmVudF9mcmllbmRfZGVsZXRlGA4gASgLMgouaGkuRW50aXR5SABSEWV2ZW50RnJpZW5kRGVs'
+    'ZXRlEjYKEGV2ZW50X2ZyaWVuZF9hZGQYECABKAsyCi5oaS5FbnRpdHlIAFIOZXZlbnRGcmllbm'
+    'RBZGQSPAoMbWVtYmVyc19pbml0GBEgASgLMhcuaGkubmluamEuR3JvdXBJbmZvTGlzdEgAUgtt'
+    'ZW1iZXJzSW5pdBI6CgxldmVudF9zdGF0dXMYEiABKAsyFS5oaS5uaW5qYS5TdGF0dXNFdmVudE'
+    'gAUgtldmVudFN0YXR1cxI7CgxldmVudF91cGRhdGUYEyABKAsyFi5oaS5uaW5qYS5VcGRhdGVT'
+    'dGF0dXNIAFILZXZlbnRVcGRhdGUSUQoWZXZlbnRfYmluYW5jZV9zZXR0aW5ncxgVIAEoCzIZLm'
+    'hpLm5pbmphLkJpbmFuY2VTZXR0aW5nc0gAUhRldmVudEJpbmFuY2VTZXR0aW5ncxJCCg5iaW5h'
+    'bmNlX3Jlc3VsdBgWIAEoCzIZLmhpLmJpbmFuY2UuQmluYW5jZVJlc3VsdEgAUg1iaW5hbmNlUm'
+    'VzdWx0EioKCHNob3dfdGlwGBggASgLMg0uaGkubmluamEuVGlwSABSB3Nob3dUaXASKwoHc2hv'
+    'd19xchgZIAEoCzIQLmhpLm5pbmphLlFyQ2FyZEgAUgZzaG93UXISQAoOYmluYW5jZV9vZmZlcn'
+    'MYGiABKAsyFy5oaS5uaW5qYS5CaW5hbmNlT2ZmZXJzSABSDWJpbmFuY2VPZmZlcnMSVQoWZXZl'
+    'bnRfcHJvZHVjdF91cGxvYWRlZBgdIAEoCzIdLmhpLmNsdWIuUHJvZHVjdEludmVudG9yeUl0ZW'
+    '1IAFIUZXZlbnRQcm9kdWN0VXBsb2FkZWQSUAoUZXZlbnRfcHJvZHVjdF9saXN0ZWQYHiABKAsy'
+    'HC5oaS5jbHViLlByb2R1Y3RBbm5vdW5jZW1lbnRIAFISZXZlbnRQcm9kdWN0TGlzdGVkEk8KE2'
+    'V2ZW50X3Byb2R1Y3Rfb3JkZXIYKCABKAsyHS5oaS5jbHViLlByb2R1Y3RQdXJjaGFzZU9yZGVy'
+    'SABSEWV2ZW50UHJvZHVjdE9yZGVyElMKFXByb2R1Y3RfYWN0aW9uX3Jlc3VsdBgpIAEoCzIdLm'
+    'hpLm5pbmphLlByb2R1Y3RBY3Rpb25SZXN1bHRIAFITcHJvZHVjdEFjdGlvblJlc3VsdBI3Cgt2'
+    'aWRlb19yZWFkeRgbIAEoCzIULmhpLm5pbmphLlZpZGVvUmVhZHlIAFIKdmlkZW9SZWFkeUIFCg'
+    'NjbWQ=');
 
 @$core.Deprecated('Use videoRequestDescriptor instead')
 const VideoRequest$json = {

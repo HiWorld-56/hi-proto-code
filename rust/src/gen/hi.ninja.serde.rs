@@ -2445,6 +2445,165 @@ impl<'de> serde::Deserialize<'de> for BrainToUpdater {
         deserializer.deserialize_struct("hi.ninja.BrainToUpdater", FIELDS, GeneratedVisitor)
     }
 }
+impl serde::Serialize for ChatDisplay {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.uuid.is_some() {
+            len += 1;
+        }
+        if self.author.is_some() {
+            len += 1;
+        }
+        if self.group.is_some() {
+            len += 1;
+        }
+        if self.body.is_some() {
+            len += 1;
+        }
+        if self.quote.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.ChatDisplay", len)?;
+        if let Some(v) = self.uuid.as_ref() {
+            struct_ser.serialize_field("uuid", v)?;
+        }
+        if let Some(v) = self.author.as_ref() {
+            struct_ser.serialize_field("author", v)?;
+        }
+        if let Some(v) = self.group.as_ref() {
+            struct_ser.serialize_field("group", v)?;
+        }
+        if let Some(v) = self.body.as_ref() {
+            struct_ser.serialize_field("body", v)?;
+        }
+        if let Some(v) = self.quote.as_ref() {
+            struct_ser.serialize_field("quote", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for ChatDisplay {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "uuid",
+            "author",
+            "group",
+            "body",
+            "quote",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Uuid,
+            Author,
+            Group,
+            Body,
+            Quote,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "uuid" => Ok(GeneratedField::Uuid),
+                            "author" => Ok(GeneratedField::Author),
+                            "group" => Ok(GeneratedField::Group),
+                            "body" => Ok(GeneratedField::Body),
+                            "quote" => Ok(GeneratedField::Quote),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = ChatDisplay;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.ChatDisplay")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<ChatDisplay, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut uuid__ = None;
+                let mut author__ = None;
+                let mut group__ = None;
+                let mut body__ = None;
+                let mut quote__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Uuid => {
+                            if uuid__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("uuid"));
+                            }
+                            uuid__ = map_.next_value()?;
+                        }
+                        GeneratedField::Author => {
+                            if author__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("author"));
+                            }
+                            author__ = map_.next_value()?;
+                        }
+                        GeneratedField::Group => {
+                            if group__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("group"));
+                            }
+                            group__ = map_.next_value()?;
+                        }
+                        GeneratedField::Body => {
+                            if body__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("body"));
+                            }
+                            body__ = map_.next_value()?;
+                        }
+                        GeneratedField::Quote => {
+                            if quote__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("quote"));
+                            }
+                            quote__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(ChatDisplay {
+                    uuid: uuid__,
+                    author: author__,
+                    group: group__,
+                    body: body__,
+                    quote: quote__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.ChatDisplay", FIELDS, GeneratedVisitor)
+    }
+}
 impl serde::Serialize for Check {
     #[allow(deprecated)]
     fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
@@ -2787,6 +2946,660 @@ impl<'de> serde::Deserialize<'de> for CmdResp {
             }
         }
         deserializer.deserialize_struct("hi.ninja.CmdResp", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DisplayAudio {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.duration.is_some() {
+            len += 1;
+        }
+        if self.autoplay.is_some() {
+            len += 1;
+        }
+        if self.source.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.DisplayAudio", len)?;
+        if let Some(v) = self.duration.as_ref() {
+            struct_ser.serialize_field("duration", v)?;
+        }
+        if let Some(v) = self.autoplay.as_ref() {
+            struct_ser.serialize_field("autoplay", v)?;
+        }
+        if let Some(v) = self.source.as_ref() {
+            match v {
+                display_audio::Source::Url(v) => {
+                    struct_ser.serialize_field("url", v)?;
+                }
+                display_audio::Source::Stream(v) => {
+                    struct_ser.serialize_field("stream", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisplayAudio {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "duration",
+            "autoplay",
+            "url",
+            "stream",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Duration,
+            Autoplay,
+            Url,
+            Stream,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "duration" => Ok(GeneratedField::Duration),
+                            "autoplay" => Ok(GeneratedField::Autoplay),
+                            "url" => Ok(GeneratedField::Url),
+                            "stream" => Ok(GeneratedField::Stream),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisplayAudio;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.DisplayAudio")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisplayAudio, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut duration__ = None;
+                let mut autoplay__ = None;
+                let mut source__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Duration => {
+                            if duration__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("duration"));
+                            }
+                            duration__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Autoplay => {
+                            if autoplay__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("autoplay"));
+                            }
+                            autoplay__ = map_.next_value()?;
+                        }
+                        GeneratedField::Url => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            source__ = map_.next_value::<::std::option::Option<_>>()?.map(display_audio::Source::Url);
+                        }
+                        GeneratedField::Stream => {
+                            if source__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("stream"));
+                            }
+                            source__ = map_.next_value::<::std::option::Option<_>>()?.map(display_audio::Source::Stream)
+;
+                        }
+                    }
+                }
+                Ok(DisplayAudio {
+                    duration: duration__,
+                    autoplay: autoplay__,
+                    source: source__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.DisplayAudio", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DisplayBody {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if !self.parts.is_empty() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.DisplayBody", len)?;
+        if !self.parts.is_empty() {
+            struct_ser.serialize_field("parts", &self.parts)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisplayBody {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "parts",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Parts,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "parts" => Ok(GeneratedField::Parts),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisplayBody;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.DisplayBody")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisplayBody, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut parts__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Parts => {
+                            if parts__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("parts"));
+                            }
+                            parts__ = Some(map_.next_value()?);
+                        }
+                    }
+                }
+                Ok(DisplayBody {
+                    parts: parts__.unwrap_or_default(),
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.DisplayBody", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DisplayMedia {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.url.is_some() {
+            len += 1;
+        }
+        if self.cover.is_some() {
+            len += 1;
+        }
+        if self.duration.is_some() {
+            len += 1;
+        }
+        if self.width.is_some() {
+            len += 1;
+        }
+        if self.height.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.DisplayMedia", len)?;
+        if let Some(v) = self.url.as_ref() {
+            struct_ser.serialize_field("url", v)?;
+        }
+        if let Some(v) = self.cover.as_ref() {
+            struct_ser.serialize_field("cover", v)?;
+        }
+        if let Some(v) = self.duration.as_ref() {
+            struct_ser.serialize_field("duration", v)?;
+        }
+        if let Some(v) = self.width.as_ref() {
+            struct_ser.serialize_field("width", v)?;
+        }
+        if let Some(v) = self.height.as_ref() {
+            struct_ser.serialize_field("height", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisplayMedia {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "url",
+            "cover",
+            "duration",
+            "width",
+            "height",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Url,
+            Cover,
+            Duration,
+            Width,
+            Height,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "url" => Ok(GeneratedField::Url),
+                            "cover" => Ok(GeneratedField::Cover),
+                            "duration" => Ok(GeneratedField::Duration),
+                            "width" => Ok(GeneratedField::Width),
+                            "height" => Ok(GeneratedField::Height),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisplayMedia;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.DisplayMedia")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisplayMedia, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut url__ = None;
+                let mut cover__ = None;
+                let mut duration__ = None;
+                let mut width__ = None;
+                let mut height__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Url => {
+                            if url__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("url"));
+                            }
+                            url__ = map_.next_value()?;
+                        }
+                        GeneratedField::Cover => {
+                            if cover__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("cover"));
+                            }
+                            cover__ = map_.next_value()?;
+                        }
+                        GeneratedField::Duration => {
+                            if duration__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("duration"));
+                            }
+                            duration__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Width => {
+                            if width__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("width"));
+                            }
+                            width__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                        GeneratedField::Height => {
+                            if height__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("height"));
+                            }
+                            height__ = 
+                                map_.next_value::<::std::option::Option<::pbjson::private::NumberDeserialize<_>>>()?.map(|x| x.0)
+                            ;
+                        }
+                    }
+                }
+                Ok(DisplayMedia {
+                    url: url__,
+                    cover: cover__,
+                    duration: duration__,
+                    width: width__,
+                    height: height__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.DisplayMedia", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DisplayPart {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.kind.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.DisplayPart", len)?;
+        if let Some(v) = self.kind.as_ref() {
+            match v {
+                display_part::Kind::Markdown(v) => {
+                    struct_ser.serialize_field("markdown", v)?;
+                }
+                display_part::Kind::Image(v) => {
+                    struct_ser.serialize_field("image", v)?;
+                }
+                display_part::Kind::Video(v) => {
+                    struct_ser.serialize_field("video", v)?;
+                }
+                display_part::Kind::Audio(v) => {
+                    struct_ser.serialize_field("audio", v)?;
+                }
+                display_part::Kind::Placeholder(v) => {
+                    struct_ser.serialize_field("placeholder", v)?;
+                }
+            }
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisplayPart {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "markdown",
+            "image",
+            "video",
+            "audio",
+            "placeholder",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Markdown,
+            Image,
+            Video,
+            Audio,
+            Placeholder,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "markdown" => Ok(GeneratedField::Markdown),
+                            "image" => Ok(GeneratedField::Image),
+                            "video" => Ok(GeneratedField::Video),
+                            "audio" => Ok(GeneratedField::Audio),
+                            "placeholder" => Ok(GeneratedField::Placeholder),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisplayPart;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.DisplayPart")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisplayPart, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut kind__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Markdown => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("markdown"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(display_part::Kind::Markdown);
+                        }
+                        GeneratedField::Image => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("image"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(display_part::Kind::Image)
+;
+                        }
+                        GeneratedField::Video => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("video"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(display_part::Kind::Video)
+;
+                        }
+                        GeneratedField::Audio => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("audio"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(display_part::Kind::Audio)
+;
+                        }
+                        GeneratedField::Placeholder => {
+                            if kind__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("placeholder"));
+                            }
+                            kind__ = map_.next_value::<::std::option::Option<_>>()?.map(display_part::Kind::Placeholder);
+                        }
+                    }
+                }
+                Ok(DisplayPart {
+                    kind: kind__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.DisplayPart", FIELDS, GeneratedVisitor)
+    }
+}
+impl serde::Serialize for DisplayQuote {
+    #[allow(deprecated)]
+    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
+    where
+        S: serde::Serializer,
+    {
+        use serde::ser::SerializeStruct;
+        let mut len = 0;
+        if self.author.is_some() {
+            len += 1;
+        }
+        if self.body.is_some() {
+            len += 1;
+        }
+        let mut struct_ser = serializer.serialize_struct("hi.ninja.DisplayQuote", len)?;
+        if let Some(v) = self.author.as_ref() {
+            struct_ser.serialize_field("author", v)?;
+        }
+        if let Some(v) = self.body.as_ref() {
+            struct_ser.serialize_field("body", v)?;
+        }
+        struct_ser.end()
+    }
+}
+impl<'de> serde::Deserialize<'de> for DisplayQuote {
+    #[allow(deprecated)]
+    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
+    where
+        D: serde::Deserializer<'de>,
+    {
+        const FIELDS: &[&str] = &[
+            "author",
+            "body",
+        ];
+
+        #[allow(clippy::enum_variant_names)]
+        enum GeneratedField {
+            Author,
+            Body,
+        }
+        impl<'de> serde::Deserialize<'de> for GeneratedField {
+            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
+            where
+                D: serde::Deserializer<'de>,
+            {
+                struct GeneratedVisitor;
+
+                impl serde::de::Visitor<'_> for GeneratedVisitor {
+                    type Value = GeneratedField;
+
+                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                        write!(formatter, "expected one of: {:?}", &FIELDS)
+                    }
+
+                    #[allow(unused_variables)]
+                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
+                    where
+                        E: serde::de::Error,
+                    {
+                        match value {
+                            "author" => Ok(GeneratedField::Author),
+                            "body" => Ok(GeneratedField::Body),
+                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
+                        }
+                    }
+                }
+                deserializer.deserialize_identifier(GeneratedVisitor)
+            }
+        }
+        struct GeneratedVisitor;
+        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
+            type Value = DisplayQuote;
+
+            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+                formatter.write_str("struct hi.ninja.DisplayQuote")
+            }
+
+            fn visit_map<V>(self, mut map_: V) -> std::result::Result<DisplayQuote, V::Error>
+                where
+                    V: serde::de::MapAccess<'de>,
+            {
+                let mut author__ = None;
+                let mut body__ = None;
+                while let Some(k) = map_.next_key()? {
+                    match k {
+                        GeneratedField::Author => {
+                            if author__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("author"));
+                            }
+                            author__ = map_.next_value()?;
+                        }
+                        GeneratedField::Body => {
+                            if body__.is_some() {
+                                return Err(serde::de::Error::duplicate_field("body"));
+                            }
+                            body__ = map_.next_value()?;
+                        }
+                    }
+                }
+                Ok(DisplayQuote {
+                    author: author__,
+                    body: body__,
+                })
+            }
+        }
+        deserializer.deserialize_struct("hi.ninja.DisplayQuote", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Emotion {
@@ -10601,114 +11414,6 @@ impl<'de> serde::Deserialize<'de> for TerminalApplicationResult {
             }
         }
         deserializer.deserialize_struct("hi.ninja.TerminalApplicationResult", FIELDS, GeneratedVisitor)
-    }
-}
-impl serde::Serialize for TextReply {
-    #[allow(deprecated)]
-    fn serialize<S>(&self, serializer: S) -> std::result::Result<S::Ok, S::Error>
-    where
-        S: serde::Serializer,
-    {
-        use serde::ser::SerializeStruct;
-        let mut len = 0;
-        if self.uuid.is_some() {
-            len += 1;
-        }
-        if self.value.is_some() {
-            len += 1;
-        }
-        let mut struct_ser = serializer.serialize_struct("hi.ninja.TextReply", len)?;
-        if let Some(v) = self.uuid.as_ref() {
-            struct_ser.serialize_field("uuid", v)?;
-        }
-        if let Some(v) = self.value.as_ref() {
-            struct_ser.serialize_field("value", v)?;
-        }
-        struct_ser.end()
-    }
-}
-impl<'de> serde::Deserialize<'de> for TextReply {
-    #[allow(deprecated)]
-    fn deserialize<D>(deserializer: D) -> std::result::Result<Self, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-    {
-        const FIELDS: &[&str] = &[
-            "uuid",
-            "value",
-        ];
-
-        #[allow(clippy::enum_variant_names)]
-        enum GeneratedField {
-            Uuid,
-            Value,
-        }
-        impl<'de> serde::Deserialize<'de> for GeneratedField {
-            fn deserialize<D>(deserializer: D) -> std::result::Result<GeneratedField, D::Error>
-            where
-                D: serde::Deserializer<'de>,
-            {
-                struct GeneratedVisitor;
-
-                impl serde::de::Visitor<'_> for GeneratedVisitor {
-                    type Value = GeneratedField;
-
-                    fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                        write!(formatter, "expected one of: {:?}", &FIELDS)
-                    }
-
-                    #[allow(unused_variables)]
-                    fn visit_str<E>(self, value: &str) -> std::result::Result<GeneratedField, E>
-                    where
-                        E: serde::de::Error,
-                    {
-                        match value {
-                            "uuid" => Ok(GeneratedField::Uuid),
-                            "value" => Ok(GeneratedField::Value),
-                            _ => Err(serde::de::Error::unknown_field(value, FIELDS)),
-                        }
-                    }
-                }
-                deserializer.deserialize_identifier(GeneratedVisitor)
-            }
-        }
-        struct GeneratedVisitor;
-        impl<'de> serde::de::Visitor<'de> for GeneratedVisitor {
-            type Value = TextReply;
-
-            fn expecting(&self, formatter: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-                formatter.write_str("struct hi.ninja.TextReply")
-            }
-
-            fn visit_map<V>(self, mut map_: V) -> std::result::Result<TextReply, V::Error>
-                where
-                    V: serde::de::MapAccess<'de>,
-            {
-                let mut uuid__ = None;
-                let mut value__ = None;
-                while let Some(k) = map_.next_key()? {
-                    match k {
-                        GeneratedField::Uuid => {
-                            if uuid__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("uuid"));
-                            }
-                            uuid__ = map_.next_value()?;
-                        }
-                        GeneratedField::Value => {
-                            if value__.is_some() {
-                                return Err(serde::de::Error::duplicate_field("value"));
-                            }
-                            value__ = map_.next_value()?;
-                        }
-                    }
-                }
-                Ok(TextReply {
-                    uuid: uuid__,
-                    value: value__,
-                })
-            }
-        }
-        deserializer.deserialize_struct("hi.ninja.TextReply", FIELDS, GeneratedVisitor)
     }
 }
 impl serde::Serialize for Tip {

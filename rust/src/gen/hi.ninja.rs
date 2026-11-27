@@ -1625,19 +1625,94 @@ pub struct MasterEvent {
     #[prost(string, optional, tag = "2")]
     pub trigger: ::core::option::Option<::prost::alloc::string::String>,
 }
-/// AI 文字回复
-/// uuid 由 brain 在本次对话开始时生成，通过 show_im_request（覆写 Message.uuid）
-/// 和 show_im_reply / show_voice_reply 两端传递，face 据此将回复路由到对应的对话框。
-/// value 为 AI 输出的纯文本，不封装为 Message 结构。
+/// brain prepares these presentation objects. face has no chat history and never
+/// interprets hi.club.Content, quote UUIDs or business reply correlations.
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
-pub struct TextReply {
+pub struct DisplayMedia {
+    #[prost(string, optional, tag = "1")]
+    pub url: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub cover: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(uint32, optional, tag = "3")]
+    pub duration: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "4")]
+    pub width: ::core::option::Option<u32>,
+    #[prost(uint32, optional, tag = "5")]
+    pub height: ::core::option::Option<u32>,
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DisplayAudio {
+    #[prost(uint32, optional, tag = "3")]
+    pub duration: ::core::option::Option<u32>,
+    /// brain chooses; quotes never autoplay
+    #[prost(bool, optional, tag = "4")]
+    pub autoplay: ::core::option::Option<bool>,
+    #[prost(oneof = "display_audio::Source", tags = "1, 2")]
+    pub source: ::core::option::Option<display_audio::Source>,
+}
+/// Nested message and enum types in `DisplayAudio`.
+pub mod display_audio {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Source {
+        #[prost(string, tag = "1")]
+        Url(::prost::alloc::string::String),
+        /// Initial TTS Start travels WITH its displayed answer. Later PCM/end use
+        /// AudioStreamPlay with this same stream_id, retaining the bounded window.
+        #[prost(message, tag = "2")]
+        Stream(super::super::AudioStreamEvent),
+    }
+}
+#[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
+pub struct DisplayPart {
+    #[prost(oneof = "display_part::Kind", tags = "1, 2, 3, 4, 5")]
+    pub kind: ::core::option::Option<display_part::Kind>,
+}
+/// Nested message and enum types in `DisplayPart`.
+pub mod display_part {
+    #[derive(Clone, PartialEq, Eq, Hash, ::prost::Oneof)]
+    pub enum Kind {
+        #[prost(string, tag = "1")]
+        Markdown(::prost::alloc::string::String),
+        #[prost(message, tag = "2")]
+        Image(super::DisplayMedia),
+        #[prost(message, tag = "3")]
+        Video(super::DisplayMedia),
+        #[prost(message, tag = "4")]
+        Audio(super::DisplayAudio),
+        #[prost(string, tag = "5")]
+        Placeholder(::prost::alloc::string::String),
+    }
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DisplayBody {
+    #[prost(message, repeated, tag = "1")]
+    pub parts: ::prost::alloc::vec::Vec<DisplayPart>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct DisplayQuote {
+    /// absent for anonymous/unavailable originals
+    #[prost(message, optional, tag = "1")]
+    pub author: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "2")]
+    pub body: ::core::option::Option<DisplayBody>,
+}
+/// Local display route only; it never replaces an IM message UUID. Requests and
+/// answers use the same projection. Source Message/Contents stay in brain.
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct ChatDisplay {
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
-    #[prost(string, optional, tag = "2")]
-    pub value: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(message, optional, tag = "2")]
+    pub author: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "3")]
+    pub group: ::core::option::Option<super::Entity>,
+    #[prost(message, optional, tag = "4")]
+    pub body: ::core::option::Option<DisplayBody>,
+    #[prost(message, optional, tag = "5")]
+    pub quote: ::core::option::Option<DisplayQuote>,
 }
 /// TTS 音频播放
-/// uuid 与对应的 TextReply.uuid 一致，audio 为完整音频文件的原始字节。
+/// uuid 与对应的 ChatDisplay.uuid 一致，audio 为完整音频文件的原始字节。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AudioPlay {
     #[prost(string, optional, tag = "1")]
@@ -1648,7 +1723,7 @@ pub struct AudioPlay {
 /// 同一stream_id也是playback_id；连续音频只申请一次播放许可。
 #[derive(Clone, PartialEq, Eq, Hash, ::prost::Message)]
 pub struct AudioStreamPlay {
-    /// 关联TextReply；空串为当前现场语音对话
+    /// 关联ChatDisplay；空串为当前现场语音对话
     #[prost(string, optional, tag = "1")]
     pub uuid: ::core::option::Option<::prost::alloc::string::String>,
     #[prost(message, optional, tag = "2")]
@@ -1873,15 +1948,15 @@ pub mod brain_to_face {
         ShowEmotion(i32),
         /// 对话内容
         ///
-        /// 收到 IM 消息（单聊/所有者/群聊）
+        /// brain-prepared incoming chat display
         #[prost(message, tag = "4")]
-        ShowImRequest(super::super::club::Message),
-        /// IM 对话的 AI 回复
+        ShowImRequest(super::ChatDisplay),
+        /// prepared chat answer, including quote/media
         #[prost(message, tag = "5")]
-        ShowImReply(super::TextReply),
-        /// 语音对话的 AI 回复
+        ShowImReply(super::ChatDisplay),
+        /// prepared local answer; same content renderer
         #[prost(message, tag = "6")]
-        ShowVoiceReply(super::TextReply),
+        ShowVoiceReply(super::ChatDisplay),
         /// 展示机器人 DID 二维码
         #[prost(message, tag = "7")]
         ShowQrCode(::pbjson_types::Empty),
