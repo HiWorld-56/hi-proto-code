@@ -3995,7 +3995,7 @@ var File_hi_ninja_ui_proto protoreflect.FileDescriptor
 
 const file_hi_ninja_ui_proto_rawDesc = "" +
 	"\n" +
-	"\x11hi/ninja/ui.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x0ehi/audio.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x13hi/club/group.proto\x1a\x17hi/club/messaging.proto\x1a\x15hi/club/product.proto\x1a\x1bhi/club/product_trade.proto\x1a\"hi/club/terminal_application.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x15hi/ninja/common.proto\x1a\x16hi/ninja/updater.proto\"Q\n" +
+	"\x11hi/ninja/ui.proto\x12\bhi.ninja\x1a\x1bbuf/validate/validate.proto\x1a\x1bgoogle/protobuf/empty.proto\x1a\x12hi/ai/plugin.proto\x1a\x0ehi/audio.proto\x1a\x18hi/binance/binance.proto\x1a\x16hi/binance/offer.proto\x1a\x13hi/club/group.proto\x1a\x15hi/club/product.proto\x1a\x1bhi/club/product_trade.proto\x1a\"hi/club/terminal_application.proto\x1a\x0fhi/common.proto\x1a\x15hi/did/transfer.proto\x1a\x15hi/ninja/common.proto\x1a\x16hi/ninja/updater.proto\"Q\n" +
 	"\tRobotInit\x12 \n" +
 	"\x05robot\x18\x01 \x01(\v2\n" +
 	".hi.EntityR\x05robot\x12\"\n" +
